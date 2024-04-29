@@ -49,7 +49,7 @@ MonoBehaviour:
   root: {fileID: 7994945532760458126}
   tip: {fileID: 6951618954919455571}
   maxLifeTime: 5
-  moveSpeed: 300
+  moveSpeed: 10
   trajectoryCorrentDistance: 1
   hittableLayer:
     serializedVersion: 2

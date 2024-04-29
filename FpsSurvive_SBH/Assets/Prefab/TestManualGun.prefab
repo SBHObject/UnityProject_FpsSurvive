@@ -466,7 +466,7 @@ MonoBehaviour:
   bulletPerShoot: 4
   firePerSecond: 1
   isFire: 0
-  BulletSpreadAngle: 0
+  BulletSpreadAngle: 5
   recoilForce: 1
   shellMesh: {fileID: 0}
   ejectionPort: {fileID: 0}
@@ -474,7 +474,8 @@ MonoBehaviour:
   shellPoolSize: 1
   clipSize: 30
   maxAmmo: 150
-  projectile: {fileID: 0}
+  projectile: {fileID: 2857868950118270426, guid: 914bec62513a30541b6e8f9cfac67852,
+    type: 3}
 --- !u!1 &8777767883889646179
 GameObject:
   m_ObjectHideFlags: 0

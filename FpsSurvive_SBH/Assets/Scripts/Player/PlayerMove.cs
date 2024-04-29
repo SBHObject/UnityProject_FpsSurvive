@@ -26,8 +26,8 @@ namespace FpsSurvive.Player
         private float camSensativity = 0.05f;
         
         //이동관련 변수
-        [SerializeField] private float walkSpeed = 5f;
-        [SerializeField] private float runSpeed = 10f;
+        public float walkSpeed = 5f;
+        public float runSpeed = 10f;
         [SerializeField] private float rotationSpeed = 1f;
         private float speedCangeRate = 10f; // 플레이어 가속도
         //실제 플레이어가 움직일 속도
@@ -38,7 +38,7 @@ namespace FpsSurvive.Player
 
         //바닥판정
         private float groundOffset = 0.1f;
-        [SerializeField] private bool isGrounded;
+        public bool IsGrounded { get; private set; }
         private float checkRange = 0.25f;
         public LayerMask layerMask;
 
@@ -85,7 +85,7 @@ namespace FpsSurvive.Player
         private void GroundedCheck()
         {
             Vector3 spherePos = new Vector3(transform.position.x, transform.position.y + groundOffset, transform.position.z);
-            isGrounded = Physics.CheckSphere(spherePos, checkRange, layerMask, QueryTriggerInteraction.Ignore);
+            IsGrounded = Physics.CheckSphere(spherePos, checkRange, layerMask, QueryTriggerInteraction.Ignore);
         }
 
         private void CameraRotation()
@@ -147,7 +147,7 @@ namespace FpsSurvive.Player
 
         private void JumpAndGravity()
         {
-            if(isGrounded)
+            if(IsGrounded)
             {
                 //땅에 있을때
                 _fallTimeDelta = fallTimeOut;   //지상유지중
@@ -206,7 +206,7 @@ namespace FpsSurvive.Player
             Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
             Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
 
-            if (isGrounded) Gizmos.color = transparentGreen;
+            if (IsGrounded) Gizmos.color = transparentGreen;
             else Gizmos.color = transparentRed;
 
             // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider

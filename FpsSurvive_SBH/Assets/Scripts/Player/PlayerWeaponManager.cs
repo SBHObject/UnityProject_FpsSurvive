@@ -1,4 +1,5 @@
 using FpsSurvive.Weapon;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,9 @@ namespace FpsSurvive.Player
 	public class PlayerWeaponManager : MonoBehaviour
     {
 		#region Variables
+		private PlayerNewInput m_Input;
+		private PlayerMove m_PlayerMove;
+
 		public Camera weaponCam;
 
 		//유저에게 처음 지급하는 무기 리스트 - 프리팹 리스트
@@ -46,13 +50,16 @@ namespace FpsSurvive.Player
 		private float weaponSwitchDelay = 1f;           //
 		private float weaponSwitchTimeStared = 0f;      //무기 교체 타이머(교체중, 다른행동 금지)
 
+		private Vector3 m_lastCharPosition;
+
 		//무기 교체시 호출되는 이벤트 함수
 		public UnityAction<WeaponController> OnSwitchToWeapon;
 		#endregion
 
 		private void Awake()
 		{
-			
+			m_Input = GetComponent<PlayerNewInput>();
+			m_PlayerMove = GetComponent<PlayerMove>();
 		}
 
 		private void Start()
@@ -76,15 +83,24 @@ namespace FpsSurvive.Player
 
 		private void Update()
 		{
+			WeaponController weaponContoller = GetActiveWeapon();
+
 			//무기 교체 인풋
 			if (weaponSwitchState == WeaponSwitchState.Up || weaponSwitchState == WeaponSwitchState.Down)
 			{
-				int switchInput = 1; //이후 변경
+				int switchInput = m_Input.GetSelectWeaponInput(); //이후 변경
 				if (switchInput != 0)
 				{
-					bool switchUp = switchInput > 0;
-					SwitchWeapon(switchUp);
+					if(GetWeaponAtSlotIndex(switchInput - 1) != null)
+					{
+						SwitchToWeaponIndex(switchInput - 1);
+					}
 				}
+			}
+
+			if (weaponSwitchState == WeaponSwitchState.Up)
+			{
+				bool hasFired = weaponContoller.HandleShootInput(m_Input.OnShootDown(), m_Input.OnShootHold());
 			}
 		}
 
@@ -94,6 +110,23 @@ namespace FpsSurvive.Player
 
 			//연산된 무기의 최종 위치를 transform에 적용
 			weaponParentSocket.localPosition = weaponMainLocalPosition;
+		}
+
+		//이동에 따른 무기 흔들림
+		private void WeaponBobing()
+		{
+			if (Time.deltaTime > 0)
+			{
+				Vector3 playerVelocity = (m_PlayerMove.transform.position - m_lastCharPosition) / Time.deltaTime;
+
+
+				float charMoveFactor = 0f;
+				if (m_PlayerMove.IsGrounded)
+				{
+					charMoveFactor = Mathf.Clamp01(playerVelocity.magnitude / m_PlayerMove.walkSpeed);
+				}
+				m_lastCharPosition = m_PlayerMove.transform.position;
+			}
 		}
 
 		//무기 상태에 따른 무기교체 연출, 무기 위치 연산 (weaponMainLoalPosition)
