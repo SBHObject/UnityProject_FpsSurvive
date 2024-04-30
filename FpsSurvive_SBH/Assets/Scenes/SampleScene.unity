@@ -1541,7 +1541,7 @@ Transform:
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: -2.191, y: 6.677, z: 3.795}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1599,7 +1599,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1427088342}
+  m_Father: {fileID: 1984175101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &463084697
 GameObject:
@@ -2375,7 +2375,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1427088342}
+  m_Father: {fileID: 1984175101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &923614173
 GameObject:
@@ -2830,7 +2830,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1427088342}
+  m_Father: {fileID: 1984175101}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1199693307
 GameObject:
@@ -3542,6 +3542,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1398415707}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1400652144
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1400652145}
+  m_Layer: 7
+  m_Name: AimingWeaponPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1400652145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400652144}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.23, z: 0.35}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1984175101}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1406126420
 GameObject:
   m_ObjectHideFlags: 0
@@ -3603,9 +3634,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 773710681}
-  - {fileID: 1161672586}
-  - {fileID: 419855740}
-  - {fileID: 869118350}
+  - {fileID: 1984175101}
   m_Father: {fileID: 8739244582969721776}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1435923566
@@ -4586,6 +4615,41 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1908737067}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1984175100
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1984175101}
+  m_Layer: 7
+  m_Name: WeaponSocket
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1984175101
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984175100}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 419855740}
+  - {fileID: 1400652145}
+  - {fileID: 869118350}
+  - {fileID: 1161672586}
+  m_Father: {fileID: 1427088342}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1989319286
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7010,6 +7074,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 547aaecbfa70a1d4cb72e7874cabfcc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCam: {fileID: 330585545}
   camRoot: {fileID: 1427088341}
   walkSpeed: 5
   runSpeed: 10
@@ -7035,6 +7100,7 @@ MonoBehaviour:
   sprint: 0
   shoot: 0
   m_ShootIsHeld: 0
+  aiming: 0
   cursorLocked: 1
   cursorInputForLook: 1
 --- !u!114 &8739244582969721779
@@ -7123,7 +7189,10 @@ MonoBehaviour:
   - {fileID: 0}
   defaultWeaponPosition: {fileID: 419855740}
   downWeaponPosition: {fileID: 869118350}
+  aimingWeaponPosition: {fileID: 1400652145}
   weaponSwitchDelay: 0.5
+  bobSharpness: 10
+  bobFrequency: 10
 --- !u!4 &8739280002150456062
 Transform:
   m_ObjectHideFlags: 0

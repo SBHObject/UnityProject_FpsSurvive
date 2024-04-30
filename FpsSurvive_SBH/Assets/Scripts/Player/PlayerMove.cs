@@ -15,6 +15,7 @@ namespace FpsSurvive.Player
         private PlayerNewInput _input;
 
         //카메라 위치
+        public Camera mainCam;
         public GameObject camRoot;
         private float _camHorizontal;
         private float _camVertical;

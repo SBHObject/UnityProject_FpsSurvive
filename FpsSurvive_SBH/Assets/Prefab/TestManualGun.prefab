@@ -467,6 +467,8 @@ MonoBehaviour:
   firePerSecond: 1
   isFire: 0
   BulletSpreadAngle: 5
+  defaultFov: 60
+  aimingFovRatio: 1.25
   recoilForce: 1
   shellMesh: {fileID: 0}
   ejectionPort: {fileID: 0}

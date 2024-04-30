@@ -36,6 +36,8 @@ namespace FpsSurvive.Weapon
 
 		public float BulletSpreadAngle = 0f;
 
+        public float aimingFovRatio;    //조준시 배율 (기본FOV * aimingFovRatio)
+
 		//반동(밀려날 힘의 크기)
 		[Range(0f, 2f)]
         public float recoilForce = 1;

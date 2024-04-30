@@ -2,6 +2,8 @@ using FpsSurvive.Weapon;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -44,13 +46,41 @@ namespace FpsSurvive.Player
 
 		public Transform defaultWeaponPosition;
 		public Transform downWeaponPosition;
+		public Transform aimingWeaponPosition;
 
 		private int weaponSwitchNewWeaponIndex;           //새로 교체할 무기 인덱스
 		[SerializeField]
 		private float weaponSwitchDelay = 1f;           //
 		private float weaponSwitchTimeStared = 0f;      //무기 교체 타이머(교체중, 다른행동 금지)
 
+		//움직일때 무기 흔들림
+		private float weaponBobFactor;
+		[SerializeField]
+		private float bobSharpness = 10f;
+		[SerializeField]
+		private float bobFrequency = 10f;
+		private float defaultBobAmount = 0.05f;
+		private float aimingBobAmount = 0.01f;
+
+		private Vector3 weaponBobPosition;
 		private Vector3 m_lastCharPosition;
+
+		//기본 FOV값
+		private float defaultFov = 60f;
+		private float aimingFov;
+
+		//무기 조준
+		public bool IsAiming { get; private set; }
+		private float aimingAnimationSpeed = 10f;
+
+		//무기 반동값
+		private Vector3 weaponRecoilLocalPosition;
+		private Vector3 accumulateRecoil;
+
+		private float recoilSharpness = 50f;
+		private float recoilReturnSharpness = 10f;
+
+		private float recoilMaxDistance = 0.5f;
 
 		//무기 교체시 호출되는 이벤트 함수
 		public UnityAction<WeaponController> OnSwitchToWeapon;
@@ -78,6 +108,10 @@ namespace FpsSurvive.Player
 				AddWeapon(weapon);
 			}
 
+			//FOV 초기화
+			SetFov(defaultFov);
+			aimingFov = defaultFov;
+
 			SwitchWeapon(true);
 		}
 
@@ -98,18 +132,78 @@ namespace FpsSurvive.Player
 				}
 			}
 
+			//무기를 들고있을경우
 			if (weaponSwitchState == WeaponSwitchState.Up)
 			{
+				//조준
+				IsAiming = m_Input.aiming;
+
+				//사격
 				bool hasFired = weaponContoller.HandleShootInput(m_Input.OnShootDown(), m_Input.OnShootHold());
+
+				if(hasFired)
+				{
+					accumulateRecoil += weaponContoller.recoilForce * Vector3.back;
+					accumulateRecoil = Vector3.ClampMagnitude(accumulateRecoil, recoilMaxDistance);
+				}
 			}
 		}
 
 		private void LateUpdate()
 		{
 			UpdateWeaponSwitching();
+			WeaponBobing();
+			WeaponAiming();
+			WeaponRecoil();
 
 			//연산된 무기의 최종 위치를 transform에 적용
-			weaponParentSocket.localPosition = weaponMainLocalPosition;
+			weaponParentSocket.localPosition = weaponMainLocalPosition + weaponBobPosition + weaponRecoilLocalPosition;
+		}
+
+		//조준
+		private void WeaponAiming()
+		{
+			if(weaponSwitchState != WeaponSwitchState.Up)
+			{
+				return;
+			}
+
+			WeaponController nowWeapon = GetActiveWeapon();
+
+			if(IsAiming && nowWeapon != null)
+			{
+				weaponMainLocalPosition = Vector3.Lerp(weaponMainLocalPosition, aimingWeaponPosition.localPosition, 
+					aimingAnimationSpeed * Time.deltaTime);
+			}
+			else
+			{
+				weaponMainLocalPosition = Vector3.Lerp(weaponMainLocalPosition, defaultWeaponPosition.localPosition,
+					aimingAnimationSpeed * Time.deltaTime);
+
+				aimingFov = Mathf.Lerp(aimingFov, defaultFov * nowWeapon.aimingFovRatio, aimingAnimationSpeed * Time.deltaTime);
+			}
+
+			SetFov(aimingFov);
+		}
+
+		private void SetFov(float fov)
+		{
+			m_PlayerMove.mainCam.fieldOfView = fov;
+			weaponCam.fieldOfView = fov;
+		}	
+
+		//무기 반동(뒤로)
+		private void WeaponRecoil()
+		{
+			if(weaponRecoilLocalPosition.z >= accumulateRecoil.z * 0.99)
+			{
+				weaponRecoilLocalPosition = Vector3.Lerp(weaponRecoilLocalPosition, accumulateRecoil, recoilSharpness * Time.deltaTime);
+			}
+			else
+			{
+				weaponRecoilLocalPosition = Vector3.Lerp(weaponRecoilLocalPosition, Vector3.zero, recoilReturnSharpness * Time.deltaTime);
+				accumulateRecoil = weaponRecoilLocalPosition;
+			}
 		}
 
 		//이동에 따른 무기 흔들림
@@ -118,13 +212,24 @@ namespace FpsSurvive.Player
 			if (Time.deltaTime > 0)
 			{
 				Vector3 playerVelocity = (m_PlayerMove.transform.position - m_lastCharPosition) / Time.deltaTime;
-
+				float moveSpeed = m_Input.sprint ? m_PlayerMove.runSpeed : m_PlayerMove.walkSpeed;
 
 				float charMoveFactor = 0f;
 				if (m_PlayerMove.IsGrounded)
 				{
-					charMoveFactor = Mathf.Clamp01(playerVelocity.magnitude / m_PlayerMove.walkSpeed);
+					charMoveFactor = Mathf.Clamp01(playerVelocity.magnitude / moveSpeed);
 				}
+
+				weaponBobFactor = Mathf.Lerp(weaponBobFactor, charMoveFactor, bobSharpness * Time.deltaTime);
+
+				float bobAmount = IsAiming? aimingBobAmount : defaultBobAmount;
+				float frequency = bobFrequency;
+
+				float hBobValue = Mathf.Sin(Time.time * frequency) * bobAmount * weaponBobFactor;
+				float vBobValue = ((Mathf.Sin(Time.time * frequency * 2f) * 0.5f) + 0.5f) * bobAmount * weaponBobFactor;
+
+				weaponBobPosition = new Vector3(hBobValue, Mathf.Abs(vBobValue), 0);
+
 				m_lastCharPosition = m_PlayerMove.transform.position;
 			}
 		}
