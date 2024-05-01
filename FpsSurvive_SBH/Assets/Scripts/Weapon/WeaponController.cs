@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-
-
+using FpsSurvive.AnimationParameter;
 
 namespace FpsSurvive.Weapon
 {
@@ -19,8 +18,10 @@ namespace FpsSurvive.Weapon
         Automatic
     }
 
+    [RequireComponent(typeof(AudioSource))]
     public class WeaponController : MonoBehaviour
     {
+        #region Variables
         public GameObject weaponRoot;
         public Transform weaponMuzzle;
 
@@ -37,9 +38,11 @@ namespace FpsSurvive.Weapon
 		public float BulletSpreadAngle = 0f;
 
         public float aimingFovRatio;    //조준시 배율 (기본FOV * aimingFovRatio)
+        public Vector3 aimingOffset = Vector3.zero; //조준시 위치 추가조정
 
-		//반동(밀려날 힘의 크기)
-		[Range(0f, 2f)]
+
+        //반동(밀려날 힘의 크기)
+        [Range(0f, 2f)]
         public float recoilForce = 1;
 
         [Header("AmmoParameter")]
@@ -52,7 +55,7 @@ namespace FpsSurvive.Weapon
         public int shellPoolSize = 1;   //탄피 오브젝트 풀 최대치
 
         public int clipSize = 30;       //탄창 크기
-        public int maxAmmo = 150;        //최대휴행탄수
+        public int maxAmmo = 150;        //최대휴행탄수 - 이후 인벤토리와 연결할것...
 
         public UnityAction OnShoot;
 
@@ -78,15 +81,34 @@ namespace FpsSurvive.Weapon
         public int GetCurrentAmmo() => m_CurrentAmmo;
 
         public bool IsReloading { get; private set; }
+        [SerializeField] private int reloadAmount;
 
         private Queue<Rigidbody> m_AmmoPool;
 
-		private void Awake()
+        //SFX 관련
+        public AudioClip shootSfx;
+        public AudioClip changeSfx;
+        public AudioClip reloadingSfx;
+        private AudioSource m_AudioSource;
+
+        //VFX 관련
+        public GameObject shootVfx;
+        private Animator ani;
+
+        #endregion
+        private void Awake()
 		{
             m_CurrentAmmo = clipSize;
             m_CarryedBullets = maxAmmo;
             lastMuzzlePosition = weaponMuzzle.position;
+            m_AudioSource = GetComponent<AudioSource>();
+            ani = GetComponent<Animator>();
 		}
+
+        private void OnEnable()
+        {
+            m_AudioSource.PlayOneShot(changeSfx);
+        }
 
         void Update()
         {
@@ -133,7 +155,6 @@ namespace FpsSurvive.Weapon
             {
                 StartCoroutine(fireWait(firePerSecond));
                 HendleShoot();
-                m_CurrentAmmo -= 1;
                 return true;
             }
             return false;
@@ -141,7 +162,6 @@ namespace FpsSurvive.Weapon
         
         private void HendleShoot()
         {
-            Debug.Log("사격");
             //총알 생성
             for(int i = 0; i < bulletPerShoot; i++)
             {
@@ -152,21 +172,33 @@ namespace FpsSurvive.Weapon
 
             OnShoot?.Invoke();
 
-            //발사 이펙트
-
             //탄피 배출
 
+            //발사 이펙트
+            if(shootVfx != null)
+            {
+                shootVfx.SetActive(true);
+            }
+
             //발사 사운드, 애니매이션 등
+            if(shootSfx != null)
+            {
+                m_AudioSource.PlayOneShot(shootSfx);
+            }
+
+            ani.SetTrigger(AniParameters.isShoot);
         }
         
         private bool CanFireCheck()
         {
-            if(isFire == true || m_CurrentAmmo <= 0)
+            if(isFire == true || IsReloading == true)
             {
-                if(m_CurrentAmmo <= 0)
-                {
-                    Debug.Log("총알부족");
-                }
+                return false;
+            }
+
+            if (m_CurrentAmmo <= 0)
+            {
+                ReloadAnimationStart();
                 return false;
             }
 
@@ -176,6 +208,7 @@ namespace FpsSurvive.Weapon
         private IEnumerator fireWait(float rps)
         {
             isFire = true;
+            m_CurrentAmmo -= 1;
             yield return new WaitForSeconds(1/rps);
 			isFire = false;
 		}
@@ -192,6 +225,37 @@ namespace FpsSurvive.Weapon
             weaponRoot.SetActive(show);
 
             isWeaponActive = show;
+        }
+
+        //이후, 재장정 애니메이팅을 할 경우 애니메이터 요청에 조건걸고, 실제 재장전 따로 지정, 애니메이터에서 호출
+        public void Reload()
+        {
+            int usedAmmo = reloadAmount - m_CurrentAmmo;
+            int realUseAmmo = m_CarryedBullets - usedAmmo;
+
+            realUseAmmo = realUseAmmo >= 0 ? usedAmmo : m_CarryedBullets;
+
+            m_CurrentAmmo = Mathf.Min(m_CarryedBullets, reloadAmount);
+            m_CarryedBullets -= realUseAmmo;
+
+            IsReloading = false;
+        }
+
+        public void ReloadAnimationStart()
+        {
+            if (m_CurrentAmmo == clipSize || m_CarryedBullets <= 0 || IsReloading == true)
+            {
+                return;
+            }
+
+            if (reloadingSfx != null)
+            {
+                m_AudioSource.PlayOneShot(reloadingSfx);
+            }
+
+            ani.SetTrigger(AniParameters.isReloading);
+
+            IsReloading = true;
         }
 	}
 }

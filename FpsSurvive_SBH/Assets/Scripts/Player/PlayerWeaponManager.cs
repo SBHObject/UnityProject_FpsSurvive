@@ -1,3 +1,4 @@
+using Cinemachine;
 using FpsSurvive.Weapon;
 using System;
 using System.Collections;
@@ -25,6 +26,7 @@ namespace FpsSurvive.Player
 		private PlayerMove m_PlayerMove;
 
 		public Camera weaponCam;
+		public CinemachineVirtualCamera virtualCamera;
 
 		//유저에게 처음 지급하는 무기 리스트 - 프리팹 리스트
 		public List<WeaponController> startingWeapons = new List<WeaponController>();
@@ -72,7 +74,7 @@ namespace FpsSurvive.Player
 		//무기 조준
 		public bool IsAiming { get; private set; }
 		private float aimingAnimationSpeed = 10f;
-
+		
 		//무기 반동값
 		private Vector3 weaponRecoilLocalPosition;
 		private Vector3 accumulateRecoil;
@@ -146,6 +148,12 @@ namespace FpsSurvive.Player
 					accumulateRecoil += weaponContoller.recoilForce * Vector3.back;
 					accumulateRecoil = Vector3.ClampMagnitude(accumulateRecoil, recoilMaxDistance);
 				}
+
+				//재장전
+				if(m_Input.GetReloadInput())
+				{
+					weaponContoller.ReloadAnimationStart();
+				}
 			}
 		}
 
@@ -170,17 +178,20 @@ namespace FpsSurvive.Player
 
 			WeaponController nowWeapon = GetActiveWeapon();
 
-			if(IsAiming && nowWeapon != null)
+
+			if((IsAiming && nowWeapon.IsReloading == false) && nowWeapon != null)
 			{
-				weaponMainLocalPosition = Vector3.Lerp(weaponMainLocalPosition, aimingWeaponPosition.localPosition, 
+				weaponMainLocalPosition = Vector3.Lerp(weaponMainLocalPosition, aimingWeaponPosition.localPosition + nowWeapon.aimingOffset,
 					aimingAnimationSpeed * Time.deltaTime);
-			}
+
+				aimingFov = Mathf.Lerp(aimingFov, defaultFov * (1 / nowWeapon.aimingFovRatio), aimingAnimationSpeed * Time.deltaTime);
+            }
 			else
 			{
 				weaponMainLocalPosition = Vector3.Lerp(weaponMainLocalPosition, defaultWeaponPosition.localPosition,
 					aimingAnimationSpeed * Time.deltaTime);
 
-				aimingFov = Mathf.Lerp(aimingFov, defaultFov * nowWeapon.aimingFovRatio, aimingAnimationSpeed * Time.deltaTime);
+				aimingFov = Mathf.Lerp(aimingFov, defaultFov, aimingAnimationSpeed * Time.deltaTime);
 			}
 
 			SetFov(aimingFov);
@@ -188,7 +199,7 @@ namespace FpsSurvive.Player
 
 		private void SetFov(float fov)
 		{
-			m_PlayerMove.mainCam.fieldOfView = fov;
+			virtualCamera.m_Lens.FieldOfView = fov;
 			weaponCam.fieldOfView = fov;
 		}	
 

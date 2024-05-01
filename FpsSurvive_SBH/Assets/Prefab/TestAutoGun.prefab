@@ -495,7 +495,7 @@ MonoBehaviour:
   slotType: 0
   shootType: 2
   bulletPerShoot: 1
-  firePerSecond: 4
+  firePerSecond: 10
   isFire: 0
   BulletSpreadAngle: 0
   aimingFovRatio: 1.5
@@ -504,7 +504,7 @@ MonoBehaviour:
   ejectionPort: {fileID: 0}
   shellEjectionForce: 2
   shellPoolSize: 1
-  clipSize: 30
-  maxAmmo: 150
+  clipSize: 10
+  maxAmmo: 15
   projectile: {fileID: 2857868950118270426, guid: 914bec62513a30541b6e8f9cfac67852,
     type: 3}

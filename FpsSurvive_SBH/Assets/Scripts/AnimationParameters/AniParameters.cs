@@ -9,5 +9,9 @@ namespace FpsSurvive.AnimationParameter
 
         //UI
         public static string isOpen = "IsOpen";
+
+        //Weapon
+        public static string isShoot = "IsShoot";
+        public static string isReloading = "IsReloading";
     }
 }

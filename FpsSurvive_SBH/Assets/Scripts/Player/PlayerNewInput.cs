@@ -95,5 +95,16 @@ namespace FpsSurvive.Player
             else
                 return 0;
 		}
+
+        public bool GetReloadInput()
+        {
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
     }
 }
