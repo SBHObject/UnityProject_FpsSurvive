@@ -11,6 +11,7 @@ namespace FpsSurvive.Weapon
         public Vector3 InitialPosition { get; private set; }
         public Vector3 InitialDirection { get; private set; }
         public Vector3 InheritedMuzzleVelocity { get; private set; }
+        public float Damage { get; private set; }
 
         public UnityAction OnShoot;
 
@@ -20,6 +21,7 @@ namespace FpsSurvive.Weapon
             InitialPosition = transform.position;
             InitialDirection = transform.forward;
             InheritedMuzzleVelocity = controller.muzzleWorldVelocity;
+            Damage = controller.gunDamage;
 
             OnShoot?.Invoke();
         }

@@ -2,7 +2,8 @@ using FpsSurvive.Player;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using FpsSurvive.Game;
+using FpsSurvive.GamePlay;
 
 namespace FpsSurvive.Weapon
 {
@@ -36,6 +37,21 @@ namespace FpsSurvive.Weapon
         List<Collider> m_ignoredColliders;
 
         private const QueryTriggerInteraction k_triggerInteraction = QueryTriggerInteraction.Collide;
+
+        [Tooltip("Max Range")]
+        //사거리 제한 무기
+        [SerializeField]
+        private bool isRangedLostDamage = false;
+        [SerializeField]
+        private AnimationCurve rangeLostDamage;
+        [SerializeField]
+        private float maxCanDamageDistance = 1000f;
+
+        //VFX
+        private float effectOffset = 0.01f;
+
+        public GameObject[] hitEffects;
+        //SFX
 
 		//데미지, 범위 데미지(유탄류) 이후 생성
 
@@ -83,7 +99,7 @@ namespace FpsSurvive.Weapon
                     if(IsHitValid(hit))
                     {
                         Debug.Log("명중");
-                        OnHit();
+                        OnHit(hit.point, hit.normal, hit.collider);
                     }
                 }
 
@@ -123,26 +139,16 @@ namespace FpsSurvive.Weapon
 
             foreach(var hit in hits)
             {
-                if(IsHitValid(hit)&& hit.distance < closestHit.distance)
+                if(hit.distance < closestHit.distance)
                 {
-                    foundHit = true;
+                    foundHit = IsHitValid(hit);
                     closestHit = hit;
                 }
             }
 
             if(foundHit)
             {
-                /*
-                //차후 구현(착탄점 이펙트 등에 사용)
-                if(closestHit.distance <= 0)
-                {
-                    closestHit.point = root.position;
-                    closestHit.normal = -transform.forward;
-                }
-                */
-
-                Debug.Log("명중");
-                OnHit();
+                OnHit(closestHit.point, closestHit.normal, closestHit.collider);
             }
 
             m_lastRootPos = root.position;
@@ -150,6 +156,11 @@ namespace FpsSurvive.Weapon
 
 		private bool IsHitValid(RaycastHit hit)
         {
+            if(hit.collider.isTrigger && hit.collider.GetComponent<Damageable>() == null)
+            {
+                return false;
+            }
+
             if(m_ignoredColliders != null && m_ignoredColliders.Contains(hit.collider))
             {
                 return false;
@@ -158,10 +169,37 @@ namespace FpsSurvive.Weapon
             return true;
         }
 
-        private void OnHit()
+        private void OnHit(Vector3 hitPoint, Vector3 normal, Collider collider)
         {
+            Damageable damageable = collider.GetComponent<Damageable>();
+            if(damageable != null)
+            {
+                damageable.InflictDamage(FinalDamage(), false, Owner);
+            }
+
+            //피격 파티클 생성
+            HitParticleInfo particleInfo = collider.GetComponentInParent<HitParticleInfo>();
+
+			if (particleInfo != null && particleInfo.material != HitMaterial.None)
+            {
+                GameObject instantiateParticle = hitEffects[(int)particleInfo.material];
+                GameObject hitEffect = Instantiate(instantiateParticle, hitPoint + effectOffset * normal, Quaternion.LookRotation(normal));
+                Destroy(hitEffect, 5f);
+            }
+
             Destroy(this.gameObject);
         }
 
+        private float FinalDamage()
+        {
+            float finalDamage = Damage;
+            if(isRangedLostDamage)
+            {
+                float flyingAmount = Vector3.Distance(transform.position, InitialPosition);
+                finalDamage = finalDamage * rangeLostDamage.Evaluate(flyingAmount / maxCanDamageDistance);
+            }
+
+            return finalDamage;
+        }
 	}
 }

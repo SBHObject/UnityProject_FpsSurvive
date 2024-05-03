@@ -57,6 +57,8 @@ namespace FpsSurvive.Weapon
         public int clipSize = 30;       //탄창 크기
         public int maxAmmo = 150;        //최대휴행탄수 - 이후 인벤토리와 연결할것...
 
+        public float gunDamage = 20;
+
         public UnityAction OnShoot;
 
         private int m_CarryedBullets;

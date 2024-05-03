@@ -496,7 +496,7 @@ MonoBehaviour:
   shellPoolSize: 1
   clipSize: 30
   maxAmmo: 150
-  projectile: {fileID: 2857868950118270426, guid: 914bec62513a30541b6e8f9cfac67852,
+  projectile: {fileID: -6335159751223275041, guid: a9eee37edacc1db479b4fdf38fba8a64,
     type: 3}
   reloadAmount: 30
   shootSfx: {fileID: 8300000, guid: 65201ddabb4144f6a8fb9480120b7656, type: 3}

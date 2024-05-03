@@ -44,6 +44,19 @@ namespace FpsSurvive.Player
 			HandleDeath();
 		}
 
+		public void TakeHeal(float healAmount)
+		{
+			if(CurrentHealth >= maxHealth)
+			{
+				return;
+			}
+
+			CurrentHealth += healAmount;
+			CurrentHealth = Mathf.Clamp(CurrentHealth, 0, maxHealth);
+
+			OnHeal?.Invoke(healAmount);
+		}
+
 		//캐릭터 죽음 처리
 		private void HandleDeath()
 		{
@@ -57,7 +70,14 @@ namespace FpsSurvive.Player
 
 				//사망효과 처리
 				OnDie?.Invoke();
+
+				Destroy(gameObject, 2f);
 			}
+		}
+
+		public float GeHealthRatio()
+		{
+			return CurrentHealth / maxHealth;
 		}
 	}
 }
