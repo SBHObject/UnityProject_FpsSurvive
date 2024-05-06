@@ -106,5 +106,14 @@ namespace FpsSurvive.Player
             return false;
         }
 
+        public bool GetInteractive()
+        {
+            if(Input.GetKeyDown(KeyCode.E))
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

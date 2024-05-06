@@ -1,12 +1,10 @@
 using Cinemachine;
 using FpsSurvive.Weapon;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace FpsSurvive.Player
 {
@@ -86,6 +84,8 @@ namespace FpsSurvive.Player
 
 		//무기 교체시 호출되는 이벤트 함수
 		public UnityAction<WeaponController> OnSwitchToWeapon;
+
+		public Image crossHairImage;
 		#endregion
 
 		private void Awake()
@@ -185,6 +185,7 @@ namespace FpsSurvive.Player
 					aimingAnimationSpeed * Time.deltaTime);
 
 				aimingFov = Mathf.Lerp(aimingFov, defaultFov * (1 / nowWeapon.aimingFovRatio), aimingAnimationSpeed * Time.deltaTime);
+				crossHairImage.enabled = false;
             }
 			else
 			{
@@ -192,6 +193,7 @@ namespace FpsSurvive.Player
 					aimingAnimationSpeed * Time.deltaTime);
 
 				aimingFov = Mathf.Lerp(aimingFov, defaultFov, aimingAnimationSpeed * Time.deltaTime);
+				crossHairImage.enabled = true;
 			}
 
 			SetFov(aimingFov);

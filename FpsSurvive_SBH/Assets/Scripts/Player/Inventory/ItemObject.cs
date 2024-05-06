@@ -1,3 +1,4 @@
+using FpsSurvive.Weapon;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace FpsSurvive.Player
         public int buyPrice;
         public int sellPrice;
 
+        public WeaponController weaponPrefab;
         public Item CreateItem()
         {
             Item newItem = new Item(this);

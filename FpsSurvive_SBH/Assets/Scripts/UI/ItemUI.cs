@@ -12,13 +12,14 @@ namespace FpsSurvive.UI
 		public GameObject ThisUI;
 		protected Animator ani;
 
-		private bool isOpen = false;
+		protected bool isOpen = false;
 
-		private PlayerMove playerMove;
-		private PlayerNewInput playerNewInput;
+		protected PlayerMove playerMove;
+        protected PlayerNewInput playerNewInput;
+        protected PlayerWeaponManager weaponManager;
 
 		[SerializeField]
-		private float animatingTimeLenght = 0.3f;
+		protected float animatingTimeLenght = 0.3f;
 		#endregion
 
 		protected virtual void Awake()
@@ -26,6 +27,7 @@ namespace FpsSurvive.UI
 			ani = ThisUI.GetComponent<Animator>();
 			playerMove = FindObjectOfType<PlayerMove>();
 			playerNewInput = FindObjectOfType<PlayerNewInput>();
+			weaponManager = FindObjectOfType<PlayerWeaponManager>();
 		}
 
 		public void Toggle()
@@ -40,7 +42,7 @@ namespace FpsSurvive.UI
 			}
 		}
 
-		protected void UIOpen()
+		protected virtual void UIOpen()
 		{
 			StartCoroutine(OpenUIAni());
 		}
@@ -50,11 +52,12 @@ namespace FpsSurvive.UI
 			StartCoroutine(CloseUIAni());
 		}
 
-		protected IEnumerator OpenUIAni()
+		protected virtual IEnumerator OpenUIAni()
 		{
 			isOpen = true;
 			playerMove.enabled = false;
 			playerNewInput.enabled = false;
+			weaponManager.enabled = false;
 			ani.SetBool(AniParameters.isOpen, true);
 
 			yield return new WaitForSeconds(animatingTimeLenght);
@@ -63,7 +66,7 @@ namespace FpsSurvive.UI
 			Cursor.visible = true;
 		}
 
-		protected IEnumerator CloseUIAni()
+		protected virtual IEnumerator CloseUIAni()
 		{
 			isOpen = false;
 			ani.SetBool(AniParameters.isOpen, false);
@@ -75,6 +78,7 @@ namespace FpsSurvive.UI
 
 			playerMove.enabled = true;
 			playerNewInput.enabled = true;
-		}
+            weaponManager.enabled = true;
+        }
 	}
 }

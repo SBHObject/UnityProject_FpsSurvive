@@ -10,6 +10,12 @@ namespace FpsSurvive.Player
 		#region Variables
 		[SerializeField]
 		private float maxHealth = 100;
+		public float MaxHealth
+		{
+			get { return maxHealth; }
+			private set { maxHealth = value; }
+		}
+
 		public float CurrentHealth { get; private set; }
 
 		private bool isDeath = false;
@@ -75,7 +81,7 @@ namespace FpsSurvive.Player
 			}
 		}
 
-		public float GeHealthRatio()
+		public float GetHealthRatio()
 		{
 			return CurrentHealth / maxHealth;
 		}

@@ -17,31 +17,29 @@ namespace FpsSurvive.Player
 		public int slotIndex = -1;
 		#endregion
 
-		private void OnEnable()
+		private void Start()
 		{
-			if(equipment == null)
-				equipment = Equipment.Instance;
-			if(inventory == null)
-				inventory = Inventory.Instance;
+			equipment = Equipment.Instance;
+			inventory = Inventory.Instance;
 		}
 
 		public void SetItemSlot(Item newItem, int sIndex)
 		{
-			slotIndex = sIndex;
-
-			if (newItem == null || newItem.itemId < 0)
-				return;
-
 			item = newItem;
 			iconImage.SetActive(true);
+			
 			iconImage.GetComponent<Image>().sprite = inventory.itemDatabase.itemObjects[item.itemId].icon;
-		}
+			
+            slotIndex = sIndex;
+
+        }
 
 		public void ResetItemSlot()
 		{
 			item = null;
 			iconImage.SetActive(false);
 			iconImage.GetComponent<Image>().sprite = null;
+			slotIndex = -1;
 		}
 	}
 }

@@ -39,7 +39,7 @@ namespace FpsSurvive.Player
 			bool empty = items.Count < FinalInvenSize;
 
 			//스택 가능한 아이템일경우
-			if (itemDatabase.itemObjects[newItem.itemId].maxStack != unstackableItemStack)
+			if (itemDatabase.itemObjects[newItem.itemId].maxStack > unstackableItemStack)
 			{
 				foreach(Item item in items)
 				{
@@ -60,7 +60,7 @@ namespace FpsSurvive.Player
 		//인벤토리 아이템 추가
 		public bool AddItem(Item newitem, bool exchange = false)
 		{
-			if((IsEmpty(newitem) == false && exchange == false) || itemDatabase.itemObjects[newitem.itemId].maxStack != unstackableItemStack)
+			if((IsEmpty(newitem) == false && exchange == false) || itemDatabase.itemObjects[newitem.itemId].maxStack > unstackableItemStack)
 			{
 				Debug.Log("인벤토리 공간 부족 or 잘못된 요청");
 				return false;
@@ -68,6 +68,7 @@ namespace FpsSurvive.Player
 
 			items.Add(newitem);
 
+			OnItemChanged?.Invoke();
 			return true;
 		}
 
@@ -112,7 +113,7 @@ namespace FpsSurvive.Player
 		//비스택형 아이템 제거
 		public void RemoveItem(Item oldItem)
 		{
-			if (itemDatabase.itemObjects[oldItem.itemId].maxStack != unstackableItemStack)
+			if (itemDatabase.itemObjects[oldItem.itemId].maxStack > unstackableItemStack)
 			{
 				Debug.Log("잘못된 요청입니다(스택형 아이템인데 비스택형 아이템 제거 요청 시도)");
 			}
