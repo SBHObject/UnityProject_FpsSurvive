@@ -86,7 +86,11 @@ namespace FpsSurvive.Player
 		private Vector3 camRecoilLocalPosition;
 		private Vector3 accumulateCamRecoil;
 
-		private float camRecoilMaxDistance = 0.1f;
+		private float camRecoilMaxDistance = 0.3f;
+        private float camRecoilSharpness = 50f;
+        private float camRecoilReturnSharpness = 2f;
+        private float lastShootTime;
+		private float firePerSecond;
 
 		//무기 교체시 호출되는 이벤트 함수
 		public UnityAction<WeaponController> OnSwitchToWeapon;
@@ -167,7 +171,7 @@ namespace FpsSurvive.Player
 
 			//연산된 무기의 최종 위치를 transform에 적용
 			weaponParentSocket.localPosition = weaponMainLocalPosition + weaponBobPosition + weaponRecoilLocalPosition;
-			camLookPosition.localPosition = baseCamLookPosition.localPosition + camRecoilLocalPosition;
+			camLookPosition.localPosition = Vector3.zero + camRecoilLocalPosition;
 		}
 
 		//조준
@@ -220,13 +224,14 @@ namespace FpsSurvive.Player
 				accumulateRecoil = weaponRecoilLocalPosition;
 			}
 
-			if(camRecoilLocalPosition.y <= accumulateCamRecoil.y * 0.99)
+			if (camRecoilLocalPosition.y <= accumulateCamRecoil.y * 0.99)
 			{
-				camRecoilLocalPosition = Vector3.Lerp(camRecoilLocalPosition, accumulateCamRecoil, recoilSharpness * Time.deltaTime);
+				camRecoilLocalPosition = Vector3.Lerp(camRecoilLocalPosition, accumulateCamRecoil, camRecoilSharpness * Time.deltaTime);
+				lastShootTime = Time.time;
 			}
 			else
 			{
-				camRecoilLocalPosition = Vector3.Lerp(camRecoilLocalPosition, Vector3.zero, recoilReturnSharpness * Time.deltaTime);
+				camRecoilLocalPosition = Vector3.Lerp(camRecoilLocalPosition, Vector3.zero, camRecoilReturnSharpness * Time.deltaTime);
 				accumulateCamRecoil = camRecoilLocalPosition;
 			}
 		}
@@ -498,6 +503,8 @@ namespace FpsSurvive.Player
 					ActiveWeaponIndex = weaponSwitchNewWeaponIndex;
 
 					WeaponController weaponController = GetWeaponAtSlotIndex(ActiveWeaponIndex);
+
+					firePerSecond = weaponController.firePerSecond;
 
 					OnSwitchToWeapon?.Invoke(weaponController);
 				}

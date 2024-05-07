@@ -490,7 +490,7 @@ MonoBehaviour:
   aimingFovRatio: 1.5
   aimingOffset: {x: 0, y: -0.0225, z: 0}
   recoilForce: 0.3
-  camRecoilForce: 0.05
+  camRecoilForce: 0.07
   shellMesh: {fileID: 0}
   ejectionPort: {fileID: 0}
   shellEjectionForce: 2
@@ -498,7 +498,7 @@ MonoBehaviour:
   clipSize: 30
   maxAmmo: 150
   gunDamage: 20
-  projectile: {fileID: -6335159751223275041, guid: a9eee37edacc1db479b4fdf38fba8a64,
+  projectile: {fileID: -6335159751223275041, guid: 07684592052a4b44ba7e02e4a48962f8,
     type: 3}
   reloadAmount: 30
   shootSfx: {fileID: 8300000, guid: 65201ddabb4144f6a8fb9480120b7656, type: 3}
