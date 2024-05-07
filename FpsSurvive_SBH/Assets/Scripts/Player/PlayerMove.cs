@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using FpsSurvive.AnimationParameter;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace FpsSurvive.Player
 {

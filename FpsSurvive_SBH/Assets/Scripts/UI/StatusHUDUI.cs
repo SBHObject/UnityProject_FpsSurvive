@@ -45,10 +45,17 @@ namespace FpsSurvive.UI
 
         private void Update()
         {
-            currentAmmoText.text = weaponController.GetCurrentAmmo().ToString();
-            //임시 지정
-            invenAmmoText.text = weaponController.GetCarriedBullets().ToString();
-
+            if (weaponController != null)
+            {
+                currentAmmoText.text = weaponController.GetCurrentAmmo().ToString();
+                //임시 지정
+                invenAmmoText.text = weaponController.GetCarriedBullets().ToString();
+            }
+            else
+            {
+                currentAmmoText.text = "";
+                invenAmmoText.text = "";
+			}
             UpdateHealthUI();
         }
 

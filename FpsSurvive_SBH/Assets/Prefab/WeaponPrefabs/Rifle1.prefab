@@ -490,12 +490,14 @@ MonoBehaviour:
   aimingFovRatio: 1.5
   aimingOffset: {x: 0, y: -0.0225, z: 0}
   recoilForce: 0.3
+  camRecoilForce: 0.05
   shellMesh: {fileID: 0}
   ejectionPort: {fileID: 0}
   shellEjectionForce: 2
   shellPoolSize: 1
   clipSize: 30
   maxAmmo: 150
+  gunDamage: 20
   projectile: {fileID: -6335159751223275041, guid: a9eee37edacc1db479b4fdf38fba8a64,
     type: 3}
   reloadAmount: 30

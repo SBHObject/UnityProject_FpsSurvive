@@ -26,9 +26,6 @@ namespace FpsSurvive.Player
 		public Camera weaponCam;
 		public CinemachineVirtualCamera virtualCamera;
 
-		//유저에게 처음 지급하는 무기 리스트 - 프리팹 리스트
-		public List<WeaponController> startingWeapons = new List<WeaponController>();
-
 		//무기가 장착되는 부모 오브젝트
 		public Transform weaponParentSocket;
 
@@ -80,7 +77,16 @@ namespace FpsSurvive.Player
 		private float recoilSharpness = 50f;
 		private float recoilReturnSharpness = 10f;
 
-		private float recoilMaxDistance = 0.5f;
+		private float recoilMaxDistance = 1f;
+
+		//카메라 무기 반동
+		public Transform baseCamLookPosition;
+		public Transform camLookPosition;
+
+		private Vector3 camRecoilLocalPosition;
+		private Vector3 accumulateCamRecoil;
+
+		private float camRecoilMaxDistance = 0.1f;
 
 		//무기 교체시 호출되는 이벤트 함수
 		public UnityAction<WeaponController> OnSwitchToWeapon;
@@ -104,17 +110,9 @@ namespace FpsSurvive.Player
 			//이벤트함수 등록
 			OnSwitchToWeapon += OnWeaponSwitch;
 
-			//시작무기 지급
-			foreach (var weapon in startingWeapons)
-			{
-				AddWeapon(weapon);
-			}
-
 			//FOV 초기화
 			SetFov(defaultFov);
 			aimingFov = defaultFov;
-
-			SwitchWeapon(true);
 		}
 
 		private void Update()
@@ -147,6 +145,9 @@ namespace FpsSurvive.Player
 				{
 					accumulateRecoil += weaponContoller.recoilForce * Vector3.back;
 					accumulateRecoil = Vector3.ClampMagnitude(accumulateRecoil, recoilMaxDistance);
+
+					accumulateCamRecoil += weaponContoller.camRecoilForce * Vector3.up;
+					accumulateCamRecoil = Vector3.ClampMagnitude(accumulateCamRecoil, camRecoilMaxDistance);
 				}
 
 				//재장전
@@ -166,6 +167,7 @@ namespace FpsSurvive.Player
 
 			//연산된 무기의 최종 위치를 transform에 적용
 			weaponParentSocket.localPosition = weaponMainLocalPosition + weaponBobPosition + weaponRecoilLocalPosition;
+			camLookPosition.localPosition = baseCamLookPosition.localPosition + camRecoilLocalPosition;
 		}
 
 		//조준
@@ -216,6 +218,16 @@ namespace FpsSurvive.Player
 			{
 				weaponRecoilLocalPosition = Vector3.Lerp(weaponRecoilLocalPosition, Vector3.zero, recoilReturnSharpness * Time.deltaTime);
 				accumulateRecoil = weaponRecoilLocalPosition;
+			}
+
+			if(camRecoilLocalPosition.y <= accumulateCamRecoil.y * 0.99)
+			{
+				camRecoilLocalPosition = Vector3.Lerp(camRecoilLocalPosition, accumulateCamRecoil, recoilSharpness * Time.deltaTime);
+			}
+			else
+			{
+				camRecoilLocalPosition = Vector3.Lerp(camRecoilLocalPosition, Vector3.zero, recoilReturnSharpness * Time.deltaTime);
+				accumulateCamRecoil = camRecoilLocalPosition;
 			}
 		}
 
@@ -314,7 +326,7 @@ namespace FpsSurvive.Player
 		//무기 추가
 		public bool AddWeapon(WeaponController newWeapon)
 		{
-			if (newWeapon == null || HasWeapon(newWeapon) != null)
+			if (newWeapon == null)
 			{
 				Debug.Log("같은 무기를 소지하고있거나, 잘못된 요청입니다");
 				return false;
@@ -335,6 +347,11 @@ namespace FpsSurvive.Player
 						weaponInstace.ShowWeapon(false);                    //무기 비활성
 
 						weaponSlots[i] = weaponInstace;                     //슬롯에 세팅한 weaponController 추가
+
+						if (ActiveWeaponIndex == -1)
+						{
+							SwitchToWeaponIndex(0);
+						}
 						return true;
 					}
 				}
@@ -354,14 +371,72 @@ namespace FpsSurvive.Player
 						weaponInstace.ShowWeapon(false);                    //무기 비활성
 
 						weaponSlots[i] = weaponInstace;                     //슬롯에 세팅한 weaponController 추가
+
+						if (ActiveWeaponIndex == -1)
+						{
+							SwitchToWeaponIndex(3);
+						}
 						return true;
 					}
 				}
 			}
 			
-
 			Debug.Log("슬롯이 꽉 찼습니다.");
 			return false;
+		}
+
+		public bool AddWeapon(WeaponController newWeapon, int addIndex)
+		{
+			if (newWeapon == null)
+			{
+				Debug.Log("잘못된 요청입니다");
+				return false;
+			}
+
+			Destroy(weaponSlots[addIndex].gameObject);
+			weaponSlots[addIndex] = null;
+
+			if(newWeapon.slotType == WeaponSlotType.Main)
+			{
+				if (addIndex > mainWeaponIndex)
+					return false;
+
+				WeaponController weaponInstance = Instantiate(newWeapon, weaponParentSocket);
+				weaponInstance.transform.localPosition = Vector3.zero;
+				weaponInstance.transform.localRotation = Quaternion.identity;
+				weaponInstance.Owner = gameObject;                   //무기 주인 세팅
+				weaponInstance.SourcePrefab = newWeapon.gameObject;  //무기 생성시 사용한 프리팹 저장
+				weaponInstance.ShowWeapon(false);                    //무기 비활성
+				weaponSlots[addIndex] = weaponInstance;                     //슬롯에 세팅한 weaponController 추가
+				return true;
+			}
+			else if(newWeapon.slotType == WeaponSlotType.Consum)
+			{
+				if (addIndex < mainWeaponIndex || addIndex > consumedWeaponIndex)
+					return false;
+
+				WeaponController weaponInstance = Instantiate(newWeapon, weaponParentSocket);
+				weaponInstance.transform.localPosition = Vector3.zero;
+				weaponInstance.transform.localRotation = Quaternion.identity;
+				weaponInstance.Owner = gameObject;                   //무기 주인 세팅
+				weaponInstance.SourcePrefab = newWeapon.gameObject;  //무기 생성시 사용한 프리팹 저장
+				weaponInstance.ShowWeapon(false);                    //무기 비활성
+				weaponSlots[addIndex] = weaponInstance;                     //슬롯에 세팅한 weaponController 추가
+				return true;
+			}
+
+			return false;
+		}
+
+		public bool ChangeWeaponSlot(int targetIndex, int changedIndex)
+		{
+			if (weaponSlots[targetIndex].slotType != weaponSlots[changedIndex].slotType)
+				return false;
+
+			WeaponController tempSlot = weaponSlots[changedIndex];
+			weaponSlots[changedIndex] = weaponSlots[targetIndex];
+			weaponSlots[targetIndex] = tempSlot;
+			return true;
 		}
 
 		//매개변수로 들어온 프리팹으로 생성된 무기가있으면 생성된 무기를 반환받는 함수

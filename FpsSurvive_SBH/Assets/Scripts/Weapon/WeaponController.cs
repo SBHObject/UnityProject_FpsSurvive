@@ -45,6 +45,8 @@ namespace FpsSurvive.Weapon
         [Range(0f, 2f)]
         public float recoilForce = 1;
 
+        public float camRecoilForce = 0.1f;
+
         [Header("AmmoParameter")]
         public GameObject shellMesh;    //ÅºÇÇ
         public Transform ejectionPort;  //ÅºÇÇ ¹èÃâ±¸ À§Ä¡
