@@ -43,6 +43,10 @@ namespace FpsSurvive.Game
 			{
 				totalDamage *= damageRatio;
 			}
+			else
+			{
+				totalDamage = damage;
+			}
 
 			health.TakeDamage(totalDamage, damageSource);
 		}

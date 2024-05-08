@@ -20,17 +20,17 @@ namespace FpsSurvive.Player
 
         private Animator _ani;
 
-		private void LateUpdate()
-		{
+        private void LateUpdate()
+        {
             m_ShootIsHeld = OnShootHold();
-		}
+        }
 
-		private void Start()
-		{
-			_ani = GetComponent<Animator>();
-		}
+        private void Start()
+        {
+            _ani = GetComponent<Animator>();
+        }
 
-		public void OnMove(InputValue value)
+        public void OnMove(InputValue value)
         {
             move = value.Get<Vector2>();
         }
@@ -43,7 +43,7 @@ namespace FpsSurvive.Player
         public void OnJump(InputValue value)
         {
             jump = value.isPressed;
-		}
+        }
 
         public void OnSprint(InputValue value)
         {
@@ -53,7 +53,7 @@ namespace FpsSurvive.Player
         public void OnShoot(InputValue value)
         {
             shoot = value.isPressed;
-		}
+        }
 
         public bool OnShootHold()
         {
@@ -94,11 +94,11 @@ namespace FpsSurvive.Player
                 return 5;
             else
                 return 0;
-		}
+        }
 
         public bool GetReloadInput()
         {
-            if(Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R))
             {
                 return true;
             }
@@ -108,12 +108,20 @@ namespace FpsSurvive.Player
 
         public bool GetInteractive()
         {
-            if(Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 return true;
             }
             return false;
         }
 
+        public bool GetEscapeButton()
+        {
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

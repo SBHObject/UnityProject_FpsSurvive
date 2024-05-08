@@ -86,9 +86,8 @@ namespace FpsSurvive.Game
                 FaceToTarget();
             }
 
-            if(forcedTarget)
+            if(forcedTarget && m_Target != null)
             {
-                StopCoroutine(targetCoroutine);
                 m_DistanceToTarget = Vector3.Distance(transform.position, m_Target.position);
             }
         }
@@ -110,8 +109,11 @@ namespace FpsSurvive.Game
         {
             while(true)
             {
-                
-                yield return new WaitForSeconds(delay);
+                if (forcedTarget)
+                {
+                    StopCoroutine(targetCoroutine);
+                }
+				yield return new WaitForSeconds(delay);
                 UpdateTarget();
             }
         }
@@ -136,16 +138,19 @@ namespace FpsSurvive.Game
                 }
             }
 
-            //DetectingRange 내부에 있으면 타겟
-            if (nearestEnemy != null && shortestDistance <= detectingRange)
+            if (forcedTarget == false)
             {
-                m_DistanceToTarget = shortestDistance;
-                m_Target = nearestEnemy;
+                //DetectingRange 내부에 있으면 타겟
+                if (nearestEnemy != null && shortestDistance <= detectingRange)
+                {
+                    m_DistanceToTarget = shortestDistance;
+                    m_Target = nearestEnemy;
+                }
+                else
+                {
+                    m_Target = null;
+                }
             }
-            else
-            {
-                m_Target = null;
-            }    
         }
 
         //적 바라보기
@@ -167,6 +172,11 @@ namespace FpsSurvive.Game
 
         private void ForcedTargeting(float damage, GameObject target)
         {
+            if(forcedTarget == true)
+            {
+                return;
+            }
+
             forcedTarget = true;
             m_Target = target.transform;
         }

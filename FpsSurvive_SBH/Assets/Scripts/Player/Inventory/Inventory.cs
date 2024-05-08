@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using FpsSurvive.Utility;
 using UnityEngine.Events;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 
 namespace FpsSurvive.Player 
 {

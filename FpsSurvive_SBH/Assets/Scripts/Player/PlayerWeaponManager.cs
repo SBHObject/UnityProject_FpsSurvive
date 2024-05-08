@@ -69,6 +69,7 @@ namespace FpsSurvive.Player
 		//무기 조준
 		public bool IsAiming { get; private set; }
 		private float aimingAnimationSpeed = 10f;
+		private bool isCamAiming = true;
 		
 		//무기 반동값
 		private Vector3 weaponRecoilLocalPosition;
@@ -177,7 +178,7 @@ namespace FpsSurvive.Player
 		//조준
 		private void WeaponAiming()
 		{
-			if(weaponSwitchState != WeaponSwitchState.Up)
+			if(weaponSwitchState != WeaponSwitchState.Up || isCamAiming == false)
 			{
 				return;
 			}

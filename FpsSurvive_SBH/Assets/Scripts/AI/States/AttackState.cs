@@ -27,6 +27,7 @@ namespace FpsSurvive.AI
         {
             if (stateMachine.ElapseTime > 1f)
             {
+                Debug.Log("공격 종료");
                 stateMachine.ChangeState(new IdleState());
             }
         }

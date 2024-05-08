@@ -111,7 +111,10 @@ namespace FpsSurvive.Weapon
 
         private void OnEnable()
         {
-            m_AudioSource.PlayOneShot(changeSfx);
+            if (changeSfx)
+            {
+                m_AudioSource.PlayOneShot(changeSfx);
+            }
         }
 
         void Update()
