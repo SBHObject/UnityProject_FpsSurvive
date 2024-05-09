@@ -24,11 +24,13 @@ namespace FpsSurvive.Weapon
 			//데미지 판정 단독화(다수의 피격 대상지점이 있는 대상이 여러번의 데미지를 받는걸 방지)
 			foreach(Collider collider in colliders)
 			{
+				Debug.Log($"collider : {collider}");
 				Damageable damageable = collider.GetComponent<Damageable>();
 				if(damageable)
 				{
+					Debug.Log(damageable);
 					Health health = damageable.GetComponentInParent<Health>();
-					if(health != null && uniqueDamageToHealth.ContainsKey(health) == true)
+					if(health != null && uniqueDamageToHealth.ContainsKey(health) == false)
 					{
 						uniqueDamageToHealth.Add(health, damageable);
 					}
@@ -39,8 +41,9 @@ namespace FpsSurvive.Weapon
 			foreach(var uniqueDamageable in uniqueDamageToHealth.Values)
 			{
 				float distance = Vector3.Distance(center, uniqueDamageable.transform.position);
-				float curvedDamage = damage * damageOverDistance.Evaluate(distance / damageArea);
+				float curvedDamage = damage * damageOverDistance.Evaluate(1 - (distance / damageArea));
 				uniqueDamageable.InflictDamage(curvedDamage, true, damageSource);
+				Debug.Log($"Damage To {uniqueDamageable}");
 			}
 		}
 	}

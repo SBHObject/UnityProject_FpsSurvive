@@ -117,17 +117,17 @@ namespace FpsSurvive.Player
 			if (equipIndex == -1)
 			{
 				//비어있는 무기 슬롯에 아이템 장착, 비어있는 슬롯이 없을경우 실패처리
-				for (int i = 0; i < mainWeaponItems.Length; i++)
+				for (int i = 0; i < consumWeaponItems.Length; i++)
 				{
-					if (mainWeaponItems[i].itemId == -1)
+					if (consumWeaponItems[i].itemId == -1)
 					{
-						mainWeaponItems[i] = newItem;
+						consumWeaponItems[i] = newItem;
 						weaponManager.AddWeapon(inventory.itemDatabase.itemObjects[newItem.itemId].weaponPrefab);
 						isEquiped = true;
 						break;
 					}
+					Debug.Log("소모성 무기칸이 꽉찼습니다.");
 				}
-				Debug.Log("소모성 무기칸이 꽉찼습니다.");
 			}
 			//슬롯을 지정하고 아이템 장착 시도시
 			else

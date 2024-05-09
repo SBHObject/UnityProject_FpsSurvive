@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 322000917499941365}
   - component: {fileID: 3571664974313511565}
   - component: {fileID: 6487403204583670535}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Rifle1Pickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49,7 +49,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -69,7 +69,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unInteractive: 0
   actionText: Press 'E' To Pickup
-  actionUi: {fileID: 0}
+  weaponItem: {fileID: 11400000, guid: 35a6e10736d22f94dab0c9ca539c52ea, type: 2}
 --- !u!1 &4366063646660886153
 GameObject:
   m_ObjectHideFlags: 0
@@ -81,7 +81,7 @@ GameObject:
   - component: {fileID: 943516471808966218}
   - component: {fileID: 7712429068941108542}
   - component: {fileID: 913456540813116755}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Mag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 2792598775468129295}
   - component: {fileID: 3462697057472497461}
   - component: {fileID: 537019676304110569}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 6724981362847853581}
   - component: {fileID: 8638936326542582571}
   - component: {fileID: 2787585160797288051}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: AK74
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -333,7 +333,7 @@ GameObject:
   - component: {fileID: 6545851344814311881}
   - component: {fileID: 3664954656097694755}
   - component: {fileID: 7810397393475445384}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}

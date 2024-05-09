@@ -47,6 +47,7 @@ namespace FpsSurvive.Player
 				OnDamaged?.Invoke(damage, damageSource);
 			}
 
+			Debug.Log($"Get Damage : {realDamageAmount}");
 			HandleDeath();
 		}
 

@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 71744098081965939}
   - component: {fileID: 8166582084108984440}
   - component: {fileID: 5571915872842273132}
+  - component: {fileID: 6535546411447120531}
   m_Layer: 0
   m_Name: Granade
   m_TagString: Untagged
@@ -246,13 +247,35 @@ MonoBehaviour:
   shellPoolSize: 1
   clipSize: 1
   maxAmmo: 5
-  gunDamage: 100
-  projectile: {fileID: 0}
-  reloadAmount: 0
+  gunDamage: 500
+  projectile: {fileID: 4687621998296312674, guid: bf8f80a612371634887de8f5b311c459,
+    type: 3}
+  reloadAmount: 1
   shootSfx: {fileID: 0}
   changeSfx: {fileID: 0}
   reloadingSfx: {fileID: 0}
   shootVfx: {fileID: 0}
+--- !u!95 &6535546411447120531
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2655725040212680674}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3888128438059536513
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,7 +325,7 @@ SphereCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}

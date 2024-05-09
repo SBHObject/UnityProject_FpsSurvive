@@ -7,10 +7,14 @@ namespace FpsSurvive.Weapon
     public class ProjectileThrow : ProjectileBase
     {
 		#region Variables
-		private Rigidbody rigidbody;
+		private Rigidbody rb;
 		private ProjectileBase projectileBase;
 
 		public Transform localThrowVector;
+		public Collider hitBox;
+
+		//중복데미지 방지...
+		private bool isActive = false;
 
 		//감지 (닿으면 기믹 작동)
 		[SerializeField]
@@ -20,34 +24,83 @@ namespace FpsSurvive.Weapon
 
 		[SerializeField]
 		private float fuseLifeTime = -1;    //-1일경우, 신관이 없음(고유 작동 기믹)
+		private float initialTime;
+
 		[SerializeField]
 		private float throwForce = 20f;
-		
+
 		public LayerMask hittableLayer = -1;    //즉시 작동
+
+		private AreaDamage areaDamage;
+
+		//VFX
+		[SerializeField]
+		private float effectOffest = 0f;
+		public GameObject HitEffect;
+
+		private float effectDestroyTime = 3f;
+		//Sfx
 		#endregion
 
 		private void OnEnable()
 		{
-			rigidbody = GetComponent<Rigidbody>();
+			rb = GetComponent<Rigidbody>();
 			projectileBase = GetComponent<ProjectileBase>();
+			areaDamage = GetComponent<AreaDamage>();
+			initialTime = Time.time;
 
 			projectileBase.OnShoot += OnShoot;
 
 			if(fuseLifeTime >= 0)
 			{
-				Destroy(gameObject, fuseLifeTime + 0.01f);
+				Destroy(gameObject, fuseLifeTime + 0.1f);
+			}
+		}
+
+		private void Update()
+		{
+			RaycastHit closestHit = new RaycastHit();
+			closestHit.distance = Mathf.Infinity;
+
+			bool foundHit = false;
+
+			RaycastHit[] hits = Physics.SphereCastAll(transform.position, detectRange, transform.forward, 1f, hittableLayer, QueryTriggerInteraction.Ignore);
+
+			foreach(var hit in hits)
+			{
+				if(hit.distance < closestHit.distance)
+				{
+					foundHit = true;
+					closestHit = hit;
+				}
+			}
+
+			if(foundHit && fuseLifeTime < 0 && isActive == false)
+			{
+				isActive = true;
+				OnHit(closestHit.point, closestHit.normal);
+			}
+
+			if (fuseLifeTime >= 0 && initialTime + fuseLifeTime <= Time.time && isActive == false)
+			{
+				isActive = true;
+				OnHit(closestHit.point, closestHit.normal);
 			}
 		}
 
 		private new void OnShoot()
 		{
-			rigidbody.AddForce(localThrowVector.localPosition, ForceMode.Impulse);
+			rb.AddForce((transform.forward + Vector3.up) * throwForce, ForceMode.Impulse);
 		}
 
-		private void Update()
+		
+
+		private void OnHit(Vector3 hitPoint, Vector3 normal)
 		{
-			
-		}
+			areaDamage.InflictAreaDamage(Damage, hitPoint, hittableLayer, QueryTriggerInteraction.Collide, projectileBase.Owner);
 
+			GameObject effect = Instantiate(HitEffect, transform.position + effectOffest * normal, Quaternion.LookRotation(normal));
+			Destroy(effect, effectDestroyTime);
+		}
 	}
 }

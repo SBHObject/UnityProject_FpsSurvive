@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 71744098081965939}
   - component: {fileID: 4687621998296312674}
   - component: {fileID: 8657720621222193706}
+  - component: {fileID: -8675503337513114998}
   m_Layer: 0
   m_Name: Granade
   m_TagString: Untagged
@@ -133,13 +134,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   localThrowVector: {fileID: 742788935962291234}
-  detectRange: 0.5
-  center: {fileID: 0}
-  fuseLifeTime: 5
-  throwForce: 20
+  hitBox: {fileID: 4816946048938810411}
+  detectRange: 0.1
+  center: {fileID: 71744098081965939}
+  fuseLifeTime: 3
+  throwForce: 2.5
   hittableLayer:
     serializedVersion: 2
     m_Bits: 471
+  effectOffest: 0.1
+  HitEffect: {fileID: 100006, guid: b6aed321cae31074a9d0ee2f23b4d875, type: 3}
 --- !u!54 &8657720621222193706
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -148,7 +152,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2655725040212680674}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 0.5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -167,6 +171,61 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-8675503337513114998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2655725040212680674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7e329ab96c2e8145928b515194fd956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageArea: 5
+  damageOverDistance:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.1666667
+      outSlope: -0.1666667
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.95
+      inSlope: -0.4722222
+      outSlope: -0.4722222
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.75
+      value: 0.6
+      inSlope: -0.5888889
+      outSlope: -0.5888889
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.5
+      inSlope: -0.4000001
+      outSlope: -0.4000001
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &3888128438059536513
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,7 +265,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3888128438059536513}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 95fa51caf74ff8249bdf780154dc95f4, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

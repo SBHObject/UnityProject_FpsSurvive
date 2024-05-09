@@ -49,8 +49,8 @@ namespace FpsSurvive.Weapon
 
         //VFX
         private float effectOffset = 0.01f;
-
         public GameObject[] hitEffects;
+
         //SFX
 
 		//데미지, 범위 데미지(유탄류) 이후 생성

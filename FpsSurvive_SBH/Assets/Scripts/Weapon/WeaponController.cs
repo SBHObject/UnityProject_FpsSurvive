@@ -194,6 +194,11 @@ namespace FpsSurvive.Weapon
             }
 
             ani.SetTrigger(AniParameters.isShoot);
+
+            if(slotType == WeaponSlotType.Consum)
+            {
+                Reload();
+            }
         }
         
         private bool CanFireCheck()
