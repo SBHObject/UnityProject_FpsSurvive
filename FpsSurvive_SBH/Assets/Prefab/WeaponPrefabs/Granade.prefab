@@ -239,6 +239,7 @@ MonoBehaviour:
   BulletSpreadAngle: 0
   aimingFovRatio: 1
   aimingOffset: {x: 0, y: 0, z: 0}
+  defaultPositionOffset: {x: 0, y: 0.1, z: 0.25}
   recoilForce: 0
   camRecoilForce: 0
   shellMesh: {fileID: 0}

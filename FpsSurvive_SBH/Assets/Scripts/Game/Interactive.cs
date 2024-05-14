@@ -20,7 +20,8 @@ namespace FpsSurvive.Game
         private PlayerNewInput thePlayer;
         #endregion
 
-        private void OnEnable()
+        
+        protected virtual void OnEnable()
         {
             thePlayer = FindObjectOfType<PlayerNewInput>();
         }

@@ -96,8 +96,11 @@ namespace FpsSurvive.Player
 				isEquiped = true;
 			}
 
-			//장비창 새로고침
-			OnEquipChange?.Invoke(oldItem, newWeapon);
+			if (isEquiped == true)
+			{
+				//장비창 새로고침
+				OnEquipChange?.Invoke(oldItem, newWeapon);
+			}
 			return isEquiped;
 		}
 
@@ -146,14 +149,20 @@ namespace FpsSurvive.Player
 				}
 				isEquiped = true;
 			}
-			//장비창 새로고침
-			OnEquipChange?.Invoke(oldItem, newItem);
+
+			if (isEquiped)
+			{
+				//장비창 새로고침
+				OnEquipChange?.Invoke(oldItem, newItem);
+			}
 			return isEquiped;
 		}
 
 		//방어구 장착
 		public void EquipItem(Item newItem)
 		{
+			bool isChanged = true;
+
 			//장착할 인덱스 지정 (방어구 계열 타입 2 ~ 5, 각각 0 ~ 3까지 장착)
 			int index = GetEquipIndex(newItem.itemId) - armorTypeIndex;
 			//장착중인 아이템을 저장(없을경우 null 저장)
@@ -164,9 +173,14 @@ namespace FpsSurvive.Player
 			if(oldItem != null && oldItem.itemId >= armorTypeIndex)
 			{
 				inventory.AddItem(oldItem , true);
+				isChanged = false;
 			}
-			//UI 새로고침
-			OnEquipChange?.Invoke(oldItem, newItem);
+
+			if (isChanged == true)
+			{
+				//UI 새로고침
+				OnEquipChange?.Invoke(oldItem, newItem);
+			}
 		}
 
 		public int GetEquipIndex(int itemId)

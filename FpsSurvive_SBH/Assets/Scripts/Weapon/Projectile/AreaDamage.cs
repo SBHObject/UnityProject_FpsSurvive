@@ -24,11 +24,9 @@ namespace FpsSurvive.Weapon
 			//데미지 판정 단독화(다수의 피격 대상지점이 있는 대상이 여러번의 데미지를 받는걸 방지)
 			foreach(Collider collider in colliders)
 			{
-				Debug.Log($"collider : {collider}");
 				Damageable damageable = collider.GetComponent<Damageable>();
 				if(damageable)
 				{
-					Debug.Log(damageable);
 					Health health = damageable.GetComponentInParent<Health>();
 					if(health != null && uniqueDamageToHealth.ContainsKey(health) == false)
 					{

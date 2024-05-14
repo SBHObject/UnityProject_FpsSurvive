@@ -51,10 +51,6 @@ namespace FpsSurvive.Weapon
 
 			projectileBase.OnShoot += OnShoot;
 
-			if(fuseLifeTime >= 0)
-			{
-				Destroy(gameObject, fuseLifeTime + 0.1f);
-			}
 		}
 
 		private void Update()
@@ -78,13 +74,13 @@ namespace FpsSurvive.Weapon
 			if(foundHit && fuseLifeTime < 0 && isActive == false)
 			{
 				isActive = true;
-				OnHit(closestHit.point, closestHit.normal);
+				OnHit(closestHit.normal);
 			}
 
 			if (fuseLifeTime >= 0 && initialTime + fuseLifeTime <= Time.time && isActive == false)
 			{
 				isActive = true;
-				OnHit(closestHit.point, closestHit.normal);
+				OnHit(closestHit.normal);
 			}
 		}
 
@@ -95,12 +91,14 @@ namespace FpsSurvive.Weapon
 
 		
 
-		private void OnHit(Vector3 hitPoint, Vector3 normal)
+		private void OnHit(Vector3 normal)
 		{
-			areaDamage.InflictAreaDamage(Damage, hitPoint, hittableLayer, QueryTriggerInteraction.Collide, projectileBase.Owner);
+			areaDamage.InflictAreaDamage(Damage, transform.position, hittableLayer, QueryTriggerInteraction.Collide, projectileBase.Owner);
 
 			GameObject effect = Instantiate(HitEffect, transform.position + effectOffest * normal, Quaternion.LookRotation(normal));
 			Destroy(effect, effectDestroyTime);
-		}
+
+            Destroy(gameObject);
+        }
 	}
 }

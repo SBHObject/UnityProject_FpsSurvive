@@ -40,6 +40,7 @@ namespace FpsSurvive.Weapon
         public float aimingFovRatio;    //조준시 배율 (기본FOV * aimingFovRatio)
         public Vector3 aimingOffset = Vector3.zero; //조준시 위치 추가조정
 
+        public Vector3 defaultPositionOffset = Vector3.zero;
 
         //반동(밀려날 힘의 크기)
         [Range(0f, 2f)]

@@ -11,6 +11,8 @@ namespace FpsSurvive.Player
         public int itemId;
         public string itemName;
 
+        public ItemBuffs[] buffs;
+
         //스택이 가능할경우, 현재 스택 수
         public int amount;
         public int maxStack;
@@ -34,6 +36,16 @@ namespace FpsSurvive.Player
             itemName = itemObject.data.itemName;
             amount = (itemObject.maxStack == 1) ? 0 : createAmount;
             maxStack = itemObject.maxStack;
+
+            //아이템 능력치 세팅
+            buffs = new ItemBuffs[itemObject.data.buffs.Length];
+            for (int i = 0; i < itemObject.data.buffs.Length; i++)
+            {
+                buffs[i] = new ItemBuffs(itemObject.data.buffs[i].Min, itemObject.data.buffs[i].Max)
+                {
+                    stat = itemObject.data.buffs[i].stat
+                };
+            }
         }
     }
 }

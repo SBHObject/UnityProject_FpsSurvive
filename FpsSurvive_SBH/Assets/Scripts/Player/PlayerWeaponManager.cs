@@ -41,6 +41,8 @@ namespace FpsSurvive.Player
 		private WeaponSwitchState weaponSwitchState;        //무기 교체 상태
 		private Vector3 weaponMainLocalPosition;        //무기 위치값(기본)
 
+		private Vector3 weaponMainPosOffest;
+
 		public Transform defaultWeaponPosition;
 		public Transform downWeaponPosition;
 		public Transform aimingWeaponPosition;
@@ -124,6 +126,11 @@ namespace FpsSurvive.Player
 		{
 			WeaponController weaponContoller = GetActiveWeapon();
 
+			if (weaponContoller != null)
+			{
+				weaponMainPosOffest = weaponContoller.defaultPositionOffset;
+			}
+
 			//무기 교체 인풋
 			if (weaponSwitchState == WeaponSwitchState.Up || weaponSwitchState == WeaponSwitchState.Down)
 			{
@@ -171,7 +178,7 @@ namespace FpsSurvive.Player
 			WeaponRecoil();
 
 			//연산된 무기의 최종 위치를 transform에 적용
-			weaponParentSocket.localPosition = weaponMainLocalPosition + weaponBobPosition + weaponRecoilLocalPosition;
+			weaponParentSocket.localPosition = weaponMainLocalPosition + weaponMainPosOffest + weaponBobPosition + weaponRecoilLocalPosition;
 			camLookPosition.localPosition = Vector3.zero + camRecoilLocalPosition;
 		}
 
