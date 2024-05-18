@@ -11,6 +11,9 @@ namespace FpsSurvive.Player
         public ItemType type;
         public int maxStack;
 
+        //ÃÑ¾Ë¼ö
+        public int createAmount;
+
         public Sprite icon;
 
         public Item data = new Item();

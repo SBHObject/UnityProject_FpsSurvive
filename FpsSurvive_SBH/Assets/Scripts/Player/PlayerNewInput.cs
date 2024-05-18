@@ -123,5 +123,14 @@ namespace FpsSurvive.Player
             }
             return false;
         }
+        
+        public bool GetHealButton()
+        {
+            if(Input.GetKeyDown(KeyCode.Q))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

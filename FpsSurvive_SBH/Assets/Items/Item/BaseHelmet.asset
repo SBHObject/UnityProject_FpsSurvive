@@ -16,7 +16,7 @@ MonoBehaviour:
   maxStack: 0
   icon: {fileID: 21300000, guid: 351613b1010efd641876b12e5dfb2eff, type: 3}
   data:
-    itemId: -1
+    itemId: 2
     itemName: BaseHelmet
     buffs:
     - stat: 5
@@ -25,7 +25,7 @@ MonoBehaviour:
       maxValue: 5
     - stat: 0
       _value: 0
-      minValue: 0
+      minValue: 1
       maxValue: 3
     amount: 0
     maxStack: 1

@@ -10,21 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62e1f2b36df7dbb45862164ae2e4384d, type: 3}
-  m_Name: Granade
+  m_Name: HealKit
   m_EditorClassIdentifier: 
-  type: 1
+  type: 0
   maxStack: 5
   createAmount: 1
-  icon: {fileID: 21300000, guid: 789992fdd08337040a9af3c7c9ff3e40, type: 3}
+  icon: {fileID: 21300000, guid: 749dae67532f4bb4b99453ac2e43fe79, type: 3}
   data:
-    itemId: 1
-    itemName: Granade
-    buffs: []
+    itemId: 7
+    itemName: HealKit
+    buffs:
+    - stat: 0
+      _value: 0
+      minValue: 0
+      maxValue: 0
     amount: 0
-    maxStack: 5
+    maxStack: 0
     creatAmount: 0
   description: 
   buyPrice: 50
-  sellPrice: 30
-  weaponPrefab: {fileID: 5571915872842273132, guid: 4b8e20adb5a511d43a3a97a894811f80,
-    type: 3}
+  sellPrice: 20
+  weaponPrefab: {fileID: 0}

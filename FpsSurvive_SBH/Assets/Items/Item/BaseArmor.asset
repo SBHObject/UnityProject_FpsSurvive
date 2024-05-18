@@ -21,8 +21,8 @@ MonoBehaviour:
     buffs:
     - stat: 0
       _value: 0
-      minValue: 0
-      maxValue: 3
+      minValue: 1
+      maxValue: 5
     amount: 0
     maxStack: 1
     createAmount: 0

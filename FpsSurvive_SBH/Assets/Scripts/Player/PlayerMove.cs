@@ -106,6 +106,8 @@ namespace FpsSurvive.Player
         {
             float targetSpeed = _input.sprint ? runSpeed : walkSpeed;
 
+            targetSpeed += PlayerStats.Instance.MoveSpeed;
+
             if (_input.move == Vector2.zero) targetSpeed = 0;
 
             float currentSpeed = new Vector3(_charCtrl.velocity.x, 0, _charCtrl.velocity.z).magnitude;

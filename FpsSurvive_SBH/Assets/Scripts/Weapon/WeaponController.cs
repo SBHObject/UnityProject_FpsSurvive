@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using FpsSurvive.AnimationParameter;
+using FpsSurvive.Player;
+using FpsSurvive.UI;
 
 namespace FpsSurvive.Weapon
 {
@@ -58,11 +60,13 @@ namespace FpsSurvive.Weapon
         public int shellPoolSize = 1;   //탄피 오브젝트 풀 최대치
 
         public int clipSize = 30;       //탄창 크기
-        public int maxAmmo = 150;        //최대휴행탄수 - 이후 인벤토리와 연결할것...
 
         public float gunDamage = 20;
 
         public UnityAction OnShoot;
+
+        //총알관련
+        public ItemObject itemObject;
 
         private int m_CarryedBullets;
         private int m_CurrentAmmo;
@@ -104,7 +108,7 @@ namespace FpsSurvive.Weapon
         private void Awake()
 		{
             m_CurrentAmmo = clipSize;
-            m_CarryedBullets = maxAmmo;
+            GetCurrectBullet();
             lastMuzzlePosition = weaponMuzzle.position;
             m_AudioSource = GetComponent<AudioSource>();
             ani = GetComponent<Animator>();
@@ -116,6 +120,12 @@ namespace FpsSurvive.Weapon
             {
                 m_AudioSource.PlayOneShot(changeSfx);
             }
+            Inventory.Instance.OnItemChanged += GetCurrectBullet;
+        }
+
+        private void OnDisable()
+        {
+            Inventory.Instance.OnItemChanged -= GetCurrectBullet;
         }
 
         void Update()
@@ -251,7 +261,18 @@ namespace FpsSurvive.Weapon
             m_CurrentAmmo = Mathf.Min(m_CarryedBullets, reloadAmount);
             m_CarryedBullets -= realUseAmmo;
 
+            if (slotType == WeaponSlotType.Main)
+            {
+                Inventory.Instance.UseInvenAmmo(itemObject.data.itemId, realUseAmmo);
+            }
+            else if(slotType == WeaponSlotType.Consum)
+            {
+                Equipment.Instance.UseConsumWeapon(itemObject.data.itemId, realUseAmmo);
+            }
+
             IsReloading = false;
+
+            GetCurrectBullet();
         }
 
         public void ReloadAnimationStart()
@@ -270,5 +291,45 @@ namespace FpsSurvive.Weapon
 
             IsReloading = true;
         }
-	}
+
+        public void GetCurrectBullet()
+        {
+            if(slotType == WeaponSlotType.Main)
+            {
+                m_CarryedBullets = Inventory.Instance.SetCurrentAmmo(itemObject.data.itemId);
+            }
+            else if (slotType == WeaponSlotType.Consum)
+            {
+                m_CarryedBullets = Equipment.Instance.SetConsumWeaponAmount(itemObject.data.itemId);
+            }
+        }
+
+        public float FinalDamage()
+        {
+            float finalDamage = gunDamage;
+
+            PlayerMove player = GetComponentInParent<PlayerMove>();
+            if(player != null)
+            {
+                PlayerStats playerStats = PlayerStats.Instance;
+
+                finalDamage *= (1 + (playerStats.DamageIncrese / 100));
+
+                //크리티컬 계산
+                bool isCrit = false;
+                float critChecker = Random.Range(0, 100);
+                if(critChecker < playerStats.CriticalRate)
+                {
+                    isCrit = true;
+                }
+
+                if(isCrit)
+                {
+                    finalDamage *= 1.5f;
+                }
+            }
+
+            return finalDamage;
+        }
+    }
 }

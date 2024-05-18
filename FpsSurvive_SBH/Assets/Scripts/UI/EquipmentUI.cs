@@ -15,7 +15,7 @@ namespace FpsSurvive.UI
 		public Transform consumWeaponSlotsParent;
 		public Transform equipSlotsParent;
 
-		private ItemSlot[] mainWeaponSlots;
+		private EquipSlot[] mainWeaponSlots;
 		private ItemSlot[] consumWeaponSlots;
 		private ItemSlot[] equipSlots;
 
@@ -29,11 +29,13 @@ namespace FpsSurvive.UI
 
 		private void Start()
 		{
-			mainWeaponSlots = mainWeaponSlotParent.GetComponentsInChildren<ItemSlot>();
+			mainWeaponSlots = mainWeaponSlotParent.GetComponentsInChildren<EquipSlot>();
 			consumWeaponSlots = consumWeaponSlotsParent.GetComponentsInChildren<ItemSlot>();
 			equipSlots = equipSlotsParent.GetComponentsInChildren<ItemSlot>();
 
 			equip.OnEquipChange += UpdateEquipUI;
+
+			UpdateEquipUI(null, null);
 		}
 
 		private void Update()
@@ -65,26 +67,16 @@ namespace FpsSurvive.UI
 			//UI ют╥б
 			for (int i = 0; i < mainWeaponSlots.Length; i++)
 			{
-				if (equip.mainWeaponItems[i].itemId != -1)
-				{
-					mainWeaponSlots[i].SetItemSlot(equip.mainWeaponItems[i], i);
-				}
+				mainWeaponSlots[i].SetItemSlot(equip.mainWeaponItems[i], i);
 			}
-
 			for (int i = 0; i < consumWeaponSlots.Length; i++)
 			{
-				if (equip.consumWeaponItems[i].itemId != -1)
-				{
-					consumWeaponSlots[i].SetItemSlot(equip.consumWeaponItems[i], i);
-				}
+				consumWeaponSlots[i].SetItemSlot(equip.consumWeaponItems[i], i);
 			}
 
 			for (int i = 0; i < equipSlots.Length; i++)
 			{
-				if (equip.equipItems[i].itemId != -1)
-				{
-					equipSlots[i].SetItemSlot(equip.equipItems[i], i);
-				}
+				equipSlots[i].SetItemSlot(equip.equipItems[i], i);
 			}
 		}
 	}

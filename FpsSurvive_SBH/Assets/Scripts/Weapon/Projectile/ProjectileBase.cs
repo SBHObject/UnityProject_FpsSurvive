@@ -21,7 +21,7 @@ namespace FpsSurvive.Weapon
             InitialPosition = transform.position;
             InitialDirection = transform.forward;
             InheritedMuzzleVelocity = controller.muzzleWorldVelocity;
-            Damage = controller.gunDamage;
+            Damage = controller.FinalDamage();
 
             OnShoot?.Invoke();
         }

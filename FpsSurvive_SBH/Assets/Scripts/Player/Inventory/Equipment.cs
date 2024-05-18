@@ -1,4 +1,5 @@
 using FpsSurvive.Utility;
+using FpsSurvive.Weapon;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace FpsSurvive.Player
 
 		private const int armorTypeIndex = 2;
 		private const int consumedWeaponIndex = 3;
+
 		#endregion
 
 		private void Start()
@@ -122,6 +124,13 @@ namespace FpsSurvive.Player
 				//비어있는 무기 슬롯에 아이템 장착, 비어있는 슬롯이 없을경우 실패처리
 				for (int i = 0; i < consumWeaponItems.Length; i++)
 				{
+					if (consumWeaponItems[i].itemId == newItem.itemId && consumWeaponItems[i].amount < consumWeaponItems[i].maxStack)
+					{
+						consumWeaponItems[i].amount += newItem.creatAmount;
+						isEquiped = true;
+						break;
+					}
+
 					if (consumWeaponItems[i].itemId == -1)
 					{
 						consumWeaponItems[i] = newItem;
@@ -145,7 +154,7 @@ namespace FpsSurvive.Player
 				//기존 장착 무기가 있을경우 인벤토리에 추가
 				if (oldItem != null)
 				{
-					inventory.AddItem(oldItem, oldItem.createAmount, true);
+					inventory.AddItem(oldItem, oldItem.amount, true);
 				}
 				isEquiped = true;
 			}
@@ -188,6 +197,100 @@ namespace FpsSurvive.Player
 			ItemType itemType = inventory.itemDatabase.itemObjects[itemId].type;
 
 			return (int)itemType;
+		}
+
+		public void UseConsumWeapon(int itemId, int useAmount)
+		{
+			for(int i = 0; i < consumWeaponItems.Length; i++)
+			{
+				if (consumWeaponItems[i].itemId == itemId)
+				{
+					consumWeaponItems[i].amount -= useAmount;
+					if (consumWeaponItems[i].amount <= 0)
+					{
+						consumWeaponItems[i] = null;
+                        consumWeaponItems[i] = new Item();
+                    }
+				}
+			}
+		}
+
+		public int SetConsumWeaponAmount(int itemId)
+		{
+			int amount = 0;
+            for (int i = 0; i < consumWeaponItems.Length; i++)
+            {
+                if (consumWeaponItems[i].itemId == itemId)
+                {
+					amount += consumWeaponItems[i].amount;
+					return amount;
+                    
+                }
+            }
+
+			return amount;
+        }
+
+		//아이템 장착 해제
+		public void UnequipItems(int slotIndex, EquipSlotType slotType)
+		{
+			Item changedItem = null;
+			if (slotType == EquipSlotType.MainWeapon)
+			{
+				changedItem = mainWeaponItems[slotIndex];
+				mainWeaponItems[slotIndex] = null;
+				mainWeaponItems[slotIndex] = new Item();
+
+				weaponManager.RemoveWeapon(slotIndex);
+			}
+			else if (slotType == EquipSlotType.ConsumWeapon)
+			{
+				changedItem = consumWeaponItems[slotIndex];
+				consumWeaponItems[slotIndex] = null;
+				consumWeaponItems[slotIndex] = new Item();
+
+				weaponManager.RemoveWeapon(slotIndex + 3);
+			}
+			else
+			{
+				changedItem = equipItems[slotIndex];
+				equipItems[slotIndex] = new Item();
+			}
+
+			OnEquipChange?.Invoke(changedItem, null);
+		}
+
+		public void SwapWeaponSlot(int selectIndex, int targetIndex, EquipSlotType slotType)
+		{
+			Item oldItem;
+			Item newItem;
+
+			if(slotType == EquipSlotType.MainWeapon)
+			{
+				oldItem = mainWeaponItems[selectIndex];
+				newItem = mainWeaponItems[targetIndex];
+
+				mainWeaponItems[selectIndex] = mainWeaponItems[targetIndex];
+				mainWeaponItems[targetIndex] = oldItem;
+
+				weaponManager.SwapWeaponIndex(selectIndex, targetIndex);
+			}
+			else if(slotType == EquipSlotType.ConsumWeapon)
+			{
+                oldItem = consumWeaponItems[selectIndex];
+                newItem = consumWeaponItems[targetIndex];
+
+                consumWeaponItems[selectIndex] = consumWeaponItems[targetIndex];
+				consumWeaponItems[targetIndex] = oldItem;
+
+				weaponManager.SwapWeaponIndex(selectIndex + 3, targetIndex + 3);
+			}
+			else
+			{
+				return;
+			}
+
+			OnEquipChange?.Invoke(oldItem, newItem);
 		}
 	}
 }

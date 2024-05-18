@@ -32,6 +32,7 @@ namespace FpsSurvive.Player
 		//플레이어가 게임중에 들고다니는 무기 배열
 		[SerializeField]
 		private WeaponController[] weaponSlots = new WeaponController[5];
+
 		//무기 슬롯 배열을 관리하는 인덱스
 		public int ActiveWeaponIndex { get; private set; }
 
@@ -397,7 +398,8 @@ namespace FpsSurvive.Player
 			Debug.Log("슬롯이 꽉 찼습니다.");
 			return false;
 		}
-
+		
+		//인덱스를 지정해서 추가
 		public bool AddWeapon(WeaponController newWeapon, int addIndex)
 		{
 			if (newWeapon == null)
@@ -441,15 +443,11 @@ namespace FpsSurvive.Player
 			return false;
 		}
 
-		public bool ChangeWeaponSlot(int targetIndex, int changedIndex)
+		//무기 제거
+		public void RemoveWeapon(int index)
 		{
-			if (weaponSlots[targetIndex].slotType != weaponSlots[changedIndex].slotType)
-				return false;
-
-			WeaponController tempSlot = weaponSlots[changedIndex];
-			weaponSlots[changedIndex] = weaponSlots[targetIndex];
-			weaponSlots[targetIndex] = tempSlot;
-			return true;
+			Destroy(weaponSlots[index].gameObject);
+			weaponSlots[index] = null;
 		}
 
 		//매개변수로 들어온 프리팹으로 생성된 무기가있으면 생성된 무기를 반환받는 함수
@@ -573,6 +571,16 @@ namespace FpsSurvive.Player
 			{
 				newWeapon.ShowWeapon(true);
 			}
+		}
+
+		public void SwapWeaponIndex(int baseIndex, int targetIndex)
+		{
+			WeaponController tempWeapon = weaponSlots[baseIndex];
+
+			weaponSlots[baseIndex] = weaponSlots[targetIndex];
+			weaponSlots[targetIndex] = tempWeapon;
+
+			SwitchWeapon(true);
 		}
 	}
 }

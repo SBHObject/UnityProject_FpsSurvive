@@ -44,6 +44,12 @@ namespace FpsSurvive.Game
 				totalDamage *= damageRatio;
 			}
 
+			PlayerMove playerMove = GetComponentInParent<PlayerMove>();
+			if(playerMove)
+			{
+				totalDamage *= (100 - PlayerStats.Instance.DamageReduce) / 100;
+			}
+
 			health.TakeDamage(totalDamage, damageSource);
 		}
 	}

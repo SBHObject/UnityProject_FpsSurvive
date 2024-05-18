@@ -27,6 +27,8 @@ namespace FpsSurvive.UI
 			invenSlots = invenSlotPerant.GetComponentsInChildren<ItemSlot>();
 
 			infoUI = GetComponent<ItemInfoUI>();
+
+			UpdateInventoryUI();
 		}
 
 		private void Update()

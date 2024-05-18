@@ -247,8 +247,8 @@ MonoBehaviour:
   shellEjectionForce: 2
   shellPoolSize: 1
   clipSize: 1
-  maxAmmo: 5
   gunDamage: 500
+  itemObject: {fileID: 11400000, guid: 29aae269312538640a48f983567bb007, type: 2}
   projectile: {fileID: 4687621998296312674, guid: bf8f80a612371634887de8f5b311c459,
     type: 3}
   reloadAmount: 1

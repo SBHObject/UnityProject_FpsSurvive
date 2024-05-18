@@ -25,13 +25,14 @@ namespace FpsSurvive.Player
 
 		public void SetItemSlot(Item newItem, int sIndex)
 		{
+            slotIndex = sIndex;
+
+			if (newItem.itemId < 0 || newItem == null) return;
+
 			item = newItem;
 			iconImage.SetActive(true);
 			
 			iconImage.GetComponent<Image>().sprite = inventory.itemDatabase.itemObjects[item.itemId].icon;
-			
-            slotIndex = sIndex;
-
         }
 
 		public void ResetItemSlot()

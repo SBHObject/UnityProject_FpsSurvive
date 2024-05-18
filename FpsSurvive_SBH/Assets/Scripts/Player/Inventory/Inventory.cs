@@ -23,6 +23,7 @@ namespace FpsSurvive.Player
 		public int FinalInvenSize { get; set; }
 		
 		public UnityAction OnItemChanged;
+
 		#endregion
 
 		protected override void Awake()
@@ -94,6 +95,10 @@ namespace FpsSurvive.Player
 							item.amount = item.maxStack;
 							//일단 나머지는 소멸, 이후 획득시 반환하도록 개선해볼것
 						}
+						else
+						{
+							item.amount += amount;
+						}
 						break;
 					}
 				}
@@ -105,7 +110,7 @@ namespace FpsSurvive.Player
 				items.Add(newItem);
 			}
 
-			OnItemChanged?.Invoke();
+            OnItemChanged?.Invoke();
 			return true;
 		}
 
@@ -119,7 +124,7 @@ namespace FpsSurvive.Player
 
 			items.Remove(oldItem);
 
-			OnItemChanged?.Invoke();
+            OnItemChanged?.Invoke();
 		}
 
 		public void RemoveItem(Item oldItem, int amount)
@@ -135,8 +140,7 @@ namespace FpsSurvive.Player
 			{
 				items.Remove(oldItem);
 			}
-
-			OnItemChanged?.Invoke();
+            OnItemChanged?.Invoke();
 		}
 
 		//아이템 위치 변경
@@ -150,6 +154,73 @@ namespace FpsSurvive.Player
 			items[indexA] = temp;
 
 			OnItemChanged?.Invoke();
+		}
+
+
+		public void UseInvenAmmo(int itemId, int amount)
+		{
+			if (itemDatabase.itemObjects[itemId].type == ItemType.ConsumWeapon)
+			{
+				foreach (Item item in items)
+				{
+					if (itemDatabase.itemObjects[item.itemId].type == ItemType.Ammo)
+					{
+						item.amount -= amount;
+						if (item.amount <= 0)
+						{
+							items.Remove(item);
+						}
+						break;
+					}
+				}
+			}
+            else if (itemDatabase.itemObjects[itemId].type == ItemType.MainWeapon)
+			{
+                foreach (Item item in items)
+                {
+                    if (item.itemId == 6)
+                    {
+                        item.amount -= amount;
+                        if (item.amount <= 0)
+                        {
+                            items.Remove(item);
+                        }
+                        break;
+                    }
+                }
+            }
+
+			OnItemChanged?.Invoke();
+
+        }
+
+		public int SetCurrentAmmo(int itemId)
+		{
+			int allAmount = 0;
+			if (itemDatabase.itemObjects[itemId].type == ItemType.ConsumWeapon)
+			{
+				foreach (Item item in items)
+				{
+					if (item.itemId == itemId)
+					{
+						allAmount += item.amount;
+					}
+					return allAmount;
+				}
+			}
+			else if(itemDatabase.itemObjects[itemId].type == ItemType.MainWeapon)
+			{
+				foreach (Item item in items)
+				{
+					if (item.itemId == 6)
+					{
+						allAmount += item.amount;
+					}
+					return allAmount;
+				}
+			}
+
+			return 0;
 		}
 
 		//장비아이템 체크
