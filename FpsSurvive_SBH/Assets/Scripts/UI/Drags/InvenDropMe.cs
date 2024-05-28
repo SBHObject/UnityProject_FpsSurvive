@@ -38,7 +38,10 @@ namespace FpsSurvive.UI
 
             //아이템을 이 슬롯에 드롭했을경우
             bool isGetValue = GetInvenDropIndex(eventData);
-            if(isGetValue)
+            Debug.Log($"inven drop : {invenDropIndex}");
+            Debug.Log($"Equip drop : {equipDropIndex}");
+
+            if (isGetValue)
             {
                 //인벤토리끼리 아이템위치를 바꿀경우
                 if(invenDropIndex >= 0)
@@ -49,7 +52,7 @@ namespace FpsSurvive.UI
                 //장착 아이템에 드랍할경우
                 if(equipDropIndex >= 0)
                 {
-                    EquipSwapItem(invenDropIndex, eventData);
+                    EquipSwapItem(equipDropIndex, eventData);
                 }
             }
         }
@@ -102,7 +105,7 @@ namespace FpsSurvive.UI
             }
 
             var equipDrag = originalObject.GetComponent<EquipDragMe>();
-            if(equipDrag && equipDrag.itemSlot && m_ItemSlot.slotIndex >= 0)
+            if(equipDrag == true && equipDrag.itemSlot && m_ItemSlot.slotIndex < 0)
             {
                 equipDropIndex = equipDrag.itemSlot.slotIndex;
                 retValue = true;
@@ -114,12 +117,14 @@ namespace FpsSurvive.UI
         private void InvenSwapItems(int dropIndex)
         {
             if (dropIndex < 0)
-                return;
+            {
+                Inventory.Instance.MoveItemToEndSlot(m_ItemSlot.slotIndex);
+            }
+            else
+            {
+                Inventory.Instance.SwapItem(dropIndex, m_ItemSlot.slotIndex);
+            }
 
-            if (m_ItemSlot == null || m_ItemSlot.slotIndex < 0)
-                return;
-
-            Inventory.Instance.SwapItem(dropIndex, m_ItemSlot.slotIndex);
         }
 
         private void EquipSwapItem(int dropIndex, PointerEventData eventData)
@@ -128,7 +133,7 @@ namespace FpsSurvive.UI
                 return;
 
             var originPointer = eventData.pointerDrag;
-            EquipSlot equipSlot = originPointer.GetComponent<EquipSlot>();
+            EquipSlot equipSlot = originPointer.GetComponentInParent<EquipSlot>();
 
             Equipment.Instance.UnequipItems(dropIndex, equipSlot.Type);
         }

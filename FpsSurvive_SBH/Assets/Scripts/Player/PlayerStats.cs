@@ -23,7 +23,7 @@ namespace FpsSurvive.Player
 		public int Gold 
 		{
 			get { return gold; }
-			set {  gold = value; } 
+			private set {  gold = value; } 
 		}
 
 		public bool IsDeath { get; set; }
@@ -84,6 +84,22 @@ namespace FpsSurvive.Player
 					}	
 				}
 			}
+		}
+
+		public void AddGold(int amount)
+		{
+			Gold += amount;
+		}
+
+		public bool UseGold(int amount)
+		{
+			if(Gold < amount)
+			{
+				return false;
+			}
+
+			Gold -= amount;
+			return true;
 		}
 	}
 }

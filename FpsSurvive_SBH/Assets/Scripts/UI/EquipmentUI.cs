@@ -10,6 +10,8 @@ namespace FpsSurvive.UI
     {
 		#region Variables
 		private Equipment equip;
+		private InventoryUI inventoryUI;
+		private ItemInfoUI itemInfoUI;
 
 		public Transform mainWeaponSlotParent;
 		public Transform consumWeaponSlotsParent;
@@ -19,6 +21,7 @@ namespace FpsSurvive.UI
 		private ItemSlot[] consumWeaponSlots;
 		private ItemSlot[] equipSlots;
 
+		public int selectSlotIndex= -1;
 		#endregion
 
 		protected override void Awake()
@@ -32,6 +35,8 @@ namespace FpsSurvive.UI
 			mainWeaponSlots = mainWeaponSlotParent.GetComponentsInChildren<EquipSlot>();
 			consumWeaponSlots = consumWeaponSlotsParent.GetComponentsInChildren<ItemSlot>();
 			equipSlots = equipSlotsParent.GetComponentsInChildren<ItemSlot>();
+			inventoryUI = GetComponent<InventoryUI>();
+			itemInfoUI = GetComponent<ItemInfoUI>();
 
 			equip.OnEquipChange += UpdateEquipUI;
 
@@ -79,5 +84,39 @@ namespace FpsSurvive.UI
 				equipSlots[i].SetItemSlot(equip.equipItems[i], i);
 			}
 		}
+
+		public void SelectSlot(int index)
+		{
+			if(inventoryUI.selectedSlotIndex >= 0)
+			{
+				inventoryUI.DeSelectSlot();
+			}
+
+			if (selectSlotIndex == index)
+			{
+				DeSelectSlot();
+				return;
+			}
+
+
+			selectSlotIndex = index;
+            itemInfoUI.OpenItemInfo();
+        }
+
+		public void DeSelectSlot()
+		{
+			if (selectSlotIndex < 0)
+				return;
+
+			selectSlotIndex = -1;
+			itemInfoUI.CloseItemInfo();
+		}
+
+		//창 닫을때 선택 해제
+        protected override void UIClose()
+        {
+            base.UIClose();
+			DeSelectSlot();
+        }
 	}
 }

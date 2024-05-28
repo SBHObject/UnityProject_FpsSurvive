@@ -131,6 +131,10 @@ namespace FpsSurvive.Player
 			{
 				weaponMainPosOffest = weaponContoller.defaultPositionOffset;
 			}
+			else
+			{
+				return;
+			}
 
 			//무기 교체 인풋
 			if (weaponSwitchState == WeaponSwitchState.Up || weaponSwitchState == WeaponSwitchState.Down)
@@ -398,7 +402,7 @@ namespace FpsSurvive.Player
 			Debug.Log("슬롯이 꽉 찼습니다.");
 			return false;
 		}
-		
+
 		//인덱스를 지정해서 추가
 		public bool AddWeapon(WeaponController newWeapon, int addIndex)
 		{
@@ -408,22 +412,31 @@ namespace FpsSurvive.Player
 				return false;
 			}
 
-			Destroy(weaponSlots[addIndex].gameObject);
-			weaponSlots[addIndex] = null;
+			if (weaponSlots[addIndex] != null)
+			{
+				Destroy(weaponSlots[addIndex].gameObject);
+                weaponSlots[addIndex] = null;
+            }
 
 			if(newWeapon.slotType == WeaponSlotType.Main)
 			{
 				if (addIndex > mainWeaponIndex)
 					return false;
 
-				WeaponController weaponInstance = Instantiate(newWeapon, weaponParentSocket);
+                WeaponController weaponInstance = Instantiate(newWeapon, weaponParentSocket);
+                weaponSlots[addIndex] = weaponInstance;                     //슬롯에 세팅한 weaponController 추가
 				weaponInstance.transform.localPosition = Vector3.zero;
 				weaponInstance.transform.localRotation = Quaternion.identity;
 				weaponInstance.Owner = gameObject;                   //무기 주인 세팅
 				weaponInstance.SourcePrefab = newWeapon.gameObject;  //무기 생성시 사용한 프리팹 저장
 				weaponInstance.ShowWeapon(false);                    //무기 비활성
-				weaponSlots[addIndex] = weaponInstance;                     //슬롯에 세팅한 weaponController 추가
-				return true;
+
+                if (ActiveWeaponIndex == -1)
+                {
+                    SwitchToWeaponIndex(addIndex);
+                }
+
+                return true;
 			}
 			else if(newWeapon.slotType == WeaponSlotType.Consum)
 			{
@@ -437,10 +450,16 @@ namespace FpsSurvive.Player
 				weaponInstance.SourcePrefab = newWeapon.gameObject;  //무기 생성시 사용한 프리팹 저장
 				weaponInstance.ShowWeapon(false);                    //무기 비활성
 				weaponSlots[addIndex] = weaponInstance;                     //슬롯에 세팅한 weaponController 추가
-				return true;
+
+                if (ActiveWeaponIndex == -1)
+                {
+                    SwitchToWeaponIndex(addIndex);
+                }
+
+                return true;
 			}
 
-			return false;
+            return false;
 		}
 
 		//무기 제거
@@ -448,6 +467,16 @@ namespace FpsSurvive.Player
 		{
 			Destroy(weaponSlots[index].gameObject);
 			weaponSlots[index] = null;
+
+			ActiveWeaponIndex = -1;
+			for(int i = 0; i< weaponSlots.Length; i++)
+			{
+				if (weaponSlots[i] != null)
+				{
+					SwitchToWeaponIndex(i);
+					break;
+				}
+			}
 		}
 
 		//매개변수로 들어온 프리팹으로 생성된 무기가있으면 생성된 무기를 반환받는 함수

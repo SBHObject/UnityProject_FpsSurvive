@@ -6,6 +6,6 @@ namespace FpsSurvive.Player
 {
     public interface IModifier
     {
-        void AddValue(ref int value);
+        void AddValue(ref int baseValue);
     }
 }

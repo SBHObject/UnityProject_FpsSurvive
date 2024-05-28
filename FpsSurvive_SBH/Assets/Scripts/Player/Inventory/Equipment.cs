@@ -88,6 +88,7 @@ namespace FpsSurvive.Player
 				oldItem = mainWeaponItems[equipIndex];
 				//슬롯에 새로운 무기 저장
 				mainWeaponItems[equipIndex] = newWeapon;
+				Debug.Log($"equipIndex : {equipIndex}");
 				weaponManager.AddWeapon(inventory.itemDatabase.itemObjects[newWeapon.itemId].weaponPrefab, equipIndex);
 
 				//기존 장착 무기가 있을경우 인벤토리에 추가
@@ -257,7 +258,8 @@ namespace FpsSurvive.Player
 				equipItems[slotIndex] = new Item();
 			}
 
-			OnEquipChange?.Invoke(changedItem, null);
+            Inventory.Instance.AddItem(changedItem);
+            OnEquipChange?.Invoke(changedItem, null);
 		}
 
 		public void SwapWeaponSlot(int selectIndex, int targetIndex, EquipSlotType slotType)

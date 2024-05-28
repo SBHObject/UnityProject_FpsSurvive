@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using FpsSurvive.Player;
-using static UnityEditor.Timeline.Actions.MenuPriority;
-using UnityEditorInternal.Profiling.Memory.Experimental;
+using FpsSurvive.UI;
+using FpsSurvive.AnimationParameter;
+using UnityEngine.UI;
 
 namespace FpsSurvive.Game
 {
-    public class StatsCheckUI : MonoBehaviour
+    public class StatsCheckUI : ItemUI
     {
-        public StatsObject playerStats;
+        #region Variables
+        public PlayerStats stats;
 
         public TextMeshProUGUI dmgReduce;
         public TextMeshProUGUI dmgIncrese;
@@ -19,58 +21,64 @@ namespace FpsSurvive.Game
         public TextMeshProUGUI backpackSize;
         public TextMeshProUGUI goldGain;
 
+        Inventory inventory;
+        Equipment equipment;
+
+        #endregion
         private void Start()
         {
-            Equipment.Instance.OnEquipChange += OnEquipChanged;
-            playerStats.OnChangeStats += OnChangeStats;
+            inventory = Inventory.Instance;
+            equipment = Equipment.Instance;
+            stats = PlayerStats.Instance;
+
+            equipment.OnEquipChange += OnChangeStats;
 
             UpdateText();
+        }
+
+        protected override IEnumerator OpenUIAni()
+        {
+            isOpen = true;
+
+            ThisUI.SetActive(true);
+            ani.SetBool(AniParameters.isOpen, true);
+
+            yield return new WaitForSeconds(animatingTimeLenght);
+        }
+
+        protected override IEnumerator CloseUIAni()
+        {
+            isOpen = false;
+            ani.SetBool(AniParameters.isOpen, false);
+
+            yield return new WaitForSeconds(animatingTimeLenght);
+
+            ThisUI.SetActive(false);
+        }
+
+        public void InfoOpen()
+        {
+            UIOpen();
+        }
+
+        public void InfoClose()
+        {
+            UIClose();
         }
 
         private void UpdateText()
         {
-            dmgReduce.text = playerStats.GetModifiredValue(AttributeType.DamageReduce).ToString();
-            dmgIncrese.text = playerStats.GetModifiredValue(AttributeType.DamageIncrese).ToString();
-            critRate.text = playerStats.GetModifiredValue(AttributeType.CriticalRate).ToString();
-            moveSpeed.text = playerStats.GetModifiredValue(AttributeType.MoveSpeed).ToString();
-            backpackSize.text = playerStats.GetModifiredValue(AttributeType.BackpackSize).ToString();
-            goldGain.text = playerStats.GetModifiredValue(AttributeType.GoldGainIncrease).ToString();
+            dmgReduce.text = stats.playerStats.GetModifiredValue(AttributeType.DamageReduce).ToString();
+            dmgIncrese.text = stats.playerStats.GetModifiredValue(AttributeType.DamageIncrese).ToString();
+            critRate.text = stats.playerStats.GetModifiredValue(AttributeType.CriticalRate).ToString();
+            moveSpeed.text = stats.playerStats.GetModifiredValue(AttributeType.MoveSpeed).ToString();
+            backpackSize.text = stats.playerStats.GetModifiredValue(AttributeType.BackpackSize).ToString();
+            goldGain.text = stats.playerStats.GetModifiredValue(AttributeType.GoldGainIncrease).ToString();
         }
 
-        private void OnChangeStats(StatsObject statsObject)
+        private void OnChangeStats(Item oldItem, Item newItem)
         {
             UpdateText();
-        }
-
-        private void OnEquipChanged(Item oldItem, Item newItem)
-        {
-            if (oldItem != null && oldItem.itemId > -1)
-            {
-                foreach (var buff in oldItem.buffs)
-                {
-                    foreach (var attribute in playerStats.attributes)
-                    {
-                        if (attribute.type == buff.stat)
-                        {
-                            attribute.value.RemoveModifier(buff._value);
-                        }
-                    }
-                }
-            }
-
-            if (newItem != null && newItem.itemId > -1)
-            {
-                foreach (var buff in newItem.buffs)
-                {
-                    foreach (var attribute in playerStats.attributes)
-                    {
-                        if (attribute.type == buff.stat)
-                        {
-                            attribute.value.AddModifier(buff._value);
-                        }
-                    }
-                }
-            }
         }
     }
 }

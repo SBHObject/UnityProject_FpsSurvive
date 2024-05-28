@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 4
   maxStack: 0
-  icon: {fileID: 0}
+  createAmount: 0
+  icon: {fileID: 21300000, guid: 6ca93523b0317c242b05932fedb07cb3, type: 3}
   data:
     itemId: 4
     itemName: BaseShoose
@@ -25,7 +26,7 @@ MonoBehaviour:
       maxValue: 5
     amount: 0
     maxStack: 1
-    createAmount: 0
+    creatAmount: 0
   description: 
   buyPrice: 500
   sellPrice: 125

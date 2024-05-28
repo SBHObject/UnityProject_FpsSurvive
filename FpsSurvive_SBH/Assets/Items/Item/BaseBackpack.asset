@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62e1f2b36df7dbb45862164ae2e4384d, type: 3}
   m_Name: BaseBackpack
   m_EditorClassIdentifier: 
-  type: 0
+  type: 5
   maxStack: 0
-  icon: {fileID: 0}
+  createAmount: 0
+  icon: {fileID: 21300000, guid: df26e35cc4099af4a84f4675adde2d77, type: 3}
   data:
     itemId: 5
     itemName: BaseBackPack
@@ -25,7 +26,7 @@ MonoBehaviour:
       maxValue: 3
     amount: 0
     maxStack: 1
-    createAmount: 0
+    creatAmount: 0
   description: 
   buyPrice: 700
   sellPrice: 250

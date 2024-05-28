@@ -22,7 +22,7 @@ namespace FpsSurvive.Player
             set
             {
                 baseValue = value;
-
+                UpdateModifiedValue();
             }
         }
 

@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 2
   maxStack: 0
-  icon: {fileID: 21300000, guid: 351613b1010efd641876b12e5dfb2eff, type: 3}
+  createAmount: 0
+  icon: {fileID: 21300000, guid: dfe4a27647ea61e4ba6d6eb1a49e6680, type: 3}
   data:
     itemId: 2
     itemName: BaseHelmet
@@ -29,7 +30,7 @@ MonoBehaviour:
       maxValue: 3
     amount: 0
     maxStack: 1
-    createAmount: 0
+    creatAmount: 0
   description: 
   buyPrice: 200
   sellPrice: 50

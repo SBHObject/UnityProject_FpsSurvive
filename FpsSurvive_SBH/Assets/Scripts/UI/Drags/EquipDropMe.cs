@@ -111,7 +111,7 @@ namespace FpsSurvive.UI
             if(equipDrag && equipDrag.itemSlot)
             {
                 int dropIndex = equipDrag.itemSlot.slotIndex;
-                EquipSlot targetSlot = originObject.GetComponent<EquipSlot>();
+                EquipSlot targetSlot = originObject.GetComponentInParent<EquipSlot>();
                 if( dropIndex >= 0 )
                 {
                     if(equipSlot.Type == targetSlot.Type)
@@ -130,11 +130,22 @@ namespace FpsSurvive.UI
             if (dropIndex < 0) return;
 
             var originObject = eventData.pointerDrag;
-            EquipSlot slot = originObject.GetComponent<EquipSlot>();
+            EquipSlot slot = originObject.GetComponentInParent<EquipSlot>();
 
             if (slot == null)
             {
-                Equipment.Instance.EquipItem(Inventory.Instance.items[dropIndex]);
+                if (equipSlot.Type == EquipSlotType.Equipment)
+                {
+                    Equipment.Instance.EquipItem(Inventory.Instance.items[dropIndex]);
+                }
+                else if (equipSlot.Type == EquipSlotType.MainWeapon)
+                {
+                    Equipment.Instance.EquipMainWeapon(Inventory.Instance.items[dropIndex], equipSlot.slotIndex);
+                }
+                else if(equipSlot.Type == EquipSlotType.ConsumWeapon)
+                {
+                    Equipment.Instance.EquipConsumWeapon(Inventory.Instance.items[dropIndex], equipSlot.slotIndex);
+                }
                 Inventory.Instance.RemoveItem(Inventory.Instance.items[dropIndex]);
             }
             else

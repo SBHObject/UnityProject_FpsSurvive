@@ -12,16 +12,20 @@ namespace FpsSurvive.UI
 
 		public GameObject pauseUIObject;
 		private bool isOpenUI = false;
+
+		//상점 우선도 부여
+		private ShopUI shopUI;
 		#endregion
 
 		private void Start()
 		{
 			m_Input = FindObjectOfType<PlayerNewInput>();
+			shopUI = GetComponent<ShopUI>();
 		}
 
 		private void Update()
 		{
-			if(m_Input.GetEscapeButton())
+			if(m_Input.GetEscapeButton() && shopUI.IsShopOpen == false)
 			{
 				ToggleUI();
 			}

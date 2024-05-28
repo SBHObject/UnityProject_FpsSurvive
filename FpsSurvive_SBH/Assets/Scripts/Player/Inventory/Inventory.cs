@@ -60,6 +60,9 @@ namespace FpsSurvive.Player
 		//인벤토리 아이템 추가
 		public bool AddItem(Item newitem, bool exchange = false)
 		{
+			if (newitem.itemId < 0)
+				return false;
+
 			if((IsEmpty(newitem) == false && exchange == false) || itemDatabase.itemObjects[newitem.itemId].maxStack > unstackableItemStack)
 			{
 				Debug.Log("인벤토리 공간 부족 or 잘못된 요청");
@@ -156,6 +159,32 @@ namespace FpsSurvive.Player
 			OnItemChanged?.Invoke();
 		}
 
+		//해당 인덱스의 아이템 끝으로 보내기
+		public void MoveItemToEndSlot(int selectIndex)
+		{
+			if (items[selectIndex].itemId < 0) return;
+
+			Item itemTemp = items[selectIndex];
+
+			items[selectIndex] = null;
+
+			for(int i = 0; i < items.Count; i++)
+			{
+				if (items[i] == null)
+				{
+					if(items[i + 1] != null)
+					{
+                        items[i] = items[i + 1];
+                        items[i + 1] = null;
+                    }
+					else
+					{
+						items[i] = itemTemp;
+						break;
+					}
+				}
+			}
+		}
 
 		public void UseInvenAmmo(int itemId, int amount)
 		{

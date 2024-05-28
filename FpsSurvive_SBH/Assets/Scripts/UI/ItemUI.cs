@@ -47,7 +47,7 @@ namespace FpsSurvive.UI
 			StartCoroutine(OpenUIAni());
 		}
 
-		protected void UIClose()
+		protected virtual void UIClose()
 		{
 			StartCoroutine(CloseUIAni());
 		}
