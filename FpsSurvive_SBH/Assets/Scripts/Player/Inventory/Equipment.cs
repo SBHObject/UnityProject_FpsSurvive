@@ -209,6 +209,8 @@ namespace FpsSurvive.Player
 					consumWeaponItems[i].amount -= useAmount;
 					if (consumWeaponItems[i].amount <= 0)
 					{
+						weaponManager.RemoveWeapon(i + mainWeaponItems.Length);
+
 						consumWeaponItems[i] = null;
                         consumWeaponItems[i] = new Item();
                     }

@@ -4193,6 +4193,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90cc06aa3c7187e4ca486b2c26f16633, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitDamageStartPosition: {fileID: 1406738086}
+  hitDamageTextPrefab: {fileID: 6199011719014946845, guid: 1adfb6274a8d249479ee2df79c33f1b2,
+    type: 3}
   detectingRange: 5
   targetMask:
     serializedVersion: 2
@@ -5550,7 +5553,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ThisUI: {fileID: 572024399}
   animatingTimeLenght: 0.3
-  playerStats: {fileID: 11400000, guid: b28e576f26145714a94c8c99cd6c45af, type: 2}
+  stats: {fileID: 0}
   dmgReduce: {fileID: 2003978267}
   dmgIncrese: {fileID: 1854596611}
   critRate: {fileID: 222058257}
@@ -11097,6 +11100,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8739296682632895974}
   m_LocalEulerAnglesHint: {x: -2, y: 90, z: -90}
+--- !u!1 &1406738085
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1406738086}
+  m_Layer: 0
+  m_Name: DamageUiStartPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1406738086
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406738085}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4058867545719111}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1425969052
 GameObject:
   m_ObjectHideFlags: 0
@@ -11682,6 +11716,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90cc06aa3c7187e4ca486b2c26f16633, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitDamageStartPosition: {fileID: 1741502496}
+  hitDamageTextPrefab: {fileID: 6199011719014946845, guid: 1adfb6274a8d249479ee2df79c33f1b2,
+    type: 3}
   detectingRange: 5
   targetMask:
     serializedVersion: 2
@@ -13569,6 +13606,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1734188505}
   m_CullTransparentMesh: 1
+--- !u!1 &1741502495
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1741502496}
+  m_Layer: 0
+  m_Name: DamageUiStartPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1741502496
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1741502495}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4058868444118113}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1748007549
 GameObject:
   m_ObjectHideFlags: 0
@@ -16930,6 +16998,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1872872824}
+  - {fileID: 1406738086}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4058868444118113
@@ -16946,6 +17015,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 354204650}
+  - {fileID: 1741502496}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23759753347870551

@@ -107,11 +107,16 @@ namespace FpsSurvive.Weapon
         #endregion
         private void Awake()
 		{
-            m_CurrentAmmo = clipSize;
+            m_CurrentAmmo = 0;
             GetCurrectBullet();
             lastMuzzlePosition = weaponMuzzle.position;
             m_AudioSource = GetComponent<AudioSource>();
             ani = GetComponent<Animator>();
+
+            if(slotType == WeaponSlotType.Consum)
+            {
+                Reload();
+            }
 		}
 
         private void OnEnable()

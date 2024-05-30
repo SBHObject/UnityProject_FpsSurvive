@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   maxStack: 5
-  createAmount: 1
+  createAmount: 3
   icon: {fileID: 21300000, guid: 789992fdd08337040a9af3c7c9ff3e40, type: 3}
   data:
     itemId: 1

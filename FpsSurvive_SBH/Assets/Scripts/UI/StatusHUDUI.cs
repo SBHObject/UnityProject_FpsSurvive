@@ -31,6 +31,7 @@ namespace FpsSurvive.UI
             health = playerWeaponManager.GetComponent<Health>();
 
             playerWeaponManager.OnSwitchToWeapon += WeaponSwitch;
+            
         }
 
         private void WeaponSwitch(WeaponController _weaponController)
@@ -39,7 +40,6 @@ namespace FpsSurvive.UI
 
             slotIndexText.text = (playerWeaponManager.ActiveWeaponIndex + 1).ToString();
             currentAmmoText.text = weaponController.GetCurrentAmmo().ToString();
-            //임시, 이후 인벤토리와 연동 필요
             invenAmmoText.text = weaponController.GetCarriedBullets().ToString();
         }
 
@@ -48,7 +48,6 @@ namespace FpsSurvive.UI
             if (weaponController != null)
             {
                 currentAmmoText.text = weaponController.GetCurrentAmmo().ToString();
-                //임시 지정
                 invenAmmoText.text = weaponController.GetCarriedBullets().ToString();
             }
             else

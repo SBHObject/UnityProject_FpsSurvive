@@ -4,13 +4,18 @@ using UnityEngine;
 using FpsSurvive.AI;
 using UnityEngine.AI;
 using FpsSurvive.Player;
+using FpsSurvive.GamePlay;
 
 namespace FpsSurvive.Game
 {
     public class Enemy : MonoBehaviour
     {
         #region Variables
-        
+        //피격시 데미지 표기 발생위치
+        public Transform hitDamageStartPosition;
+        //피격데미지 프리팹
+        public GameObject hitDamageTextPrefab;
+
         //데미지를 받을경우, 데미지를 준 대상 강제 타게팅
         private Health health;
         private bool forcedTarget = false;
@@ -71,6 +76,7 @@ namespace FpsSurvive.Game
             stateMachine.RegisterState(new DeathState());
 
             health.OnDamaged += ForcedTargeting;
+            health.OnDamaged += DamageTextInitialte;
             //적 찾기
             targetCoroutine = UpdateTargetDelay(m_DelayTime);
             StartCoroutine(targetCoroutine);
@@ -179,6 +185,15 @@ namespace FpsSurvive.Game
 
             forcedTarget = true;
             m_Target = target.transform;
+        }
+
+        private void DamageTextInitialte(float damage, GameObject damageSource)
+        {
+            if(damageSource.GetComponent<PlayerMove>() != null)
+            {
+                GameObject textObject = Instantiate(hitDamageTextPrefab, hitDamageStartPosition.position, Quaternion.identity);
+                textObject.GetComponent<DamageText>().Damage = (int)damage;
+            }
         }
     }
 }
