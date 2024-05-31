@@ -1,3 +1,4 @@
+using FpsSurvive.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,8 +12,14 @@ namespace FpsSurvive.Main
         [SerializeField]
         private string tutorialSceneName;
 
+        private OptionUI optionUI;
 
         #endregion
+        private void Start()
+        {
+            optionUI = GetComponent<OptionUI>();
+        }
+
 
         public void PressStartButton()
         {
@@ -21,7 +28,7 @@ namespace FpsSurvive.Main
 
         public void PressOptionButton()
         {
-
+            optionUI.OpenOptionUI();
         }
 
         public void PressQuitButton()
